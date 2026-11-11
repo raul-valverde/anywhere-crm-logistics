@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ni.edu.uam.anywherecrm.controller.LoginController"
+      alignment="CENTER" spacing="15" prefWidth="400" prefHeight="400" style="-fx-padding: 30;">
+
+    <Label text="Anywhere CRM - Acceso al Sistema" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <TextField fx:id="txtUsername" promptText="Nombre de usuario"/>
+    <PasswordField fx:id="txtPassword" promptText="Contraseña"/>
+
+    <Button text="Iniciar Sesión" onAction="#handleLogin" prefWidth="200" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
+</VBox>
