@@ -5,6 +5,8 @@ module ni.edu.uam.anywherecrm {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
+    requires jakarta.persistence;
+    requires org.hibernate.orm.core;
 
     opens ni.edu.uam.anywherecrm to javafx.fxml;
     exports ni.edu.uam.anywherecrm;
