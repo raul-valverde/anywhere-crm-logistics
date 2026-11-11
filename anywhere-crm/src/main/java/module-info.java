@@ -1,4 +1,4 @@
-module ni.edu.uam.anycrmlogic {
+module ni.edu.uam.anywherecrm {
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -6,6 +6,6 @@ module ni.edu.uam.anycrmlogic {
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
 
-    opens ni.edu.uam.anycrmlogic to javafx.fxml;
-    exports ni.edu.uam.anycrmlogic;
+    opens ni.edu.uam.anywherecrm to javafx.fxml;
+    exports ni.edu.uam.anywherecrm;
 }

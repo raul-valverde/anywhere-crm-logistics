@@ -1,4 +1,4 @@
-package ni.edu.uam.anycrmlogic;
+package ni.edu.uam.anywherecrm;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
