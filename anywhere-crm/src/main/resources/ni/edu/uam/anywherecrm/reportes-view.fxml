@@ -2,6 +2,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+
+
+
+
 <VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
       fx:controller="ni.edu.uam.anywherecrm.controller.ReportesController"
       spacing="15" style="-fx-padding: 20;">
