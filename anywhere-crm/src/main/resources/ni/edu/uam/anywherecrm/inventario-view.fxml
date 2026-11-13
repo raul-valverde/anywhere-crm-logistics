@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ni.edu.uam.anywherecrm.controller.InventarioController"
+      spacing="10" style="-fx-padding: 20;">
+
+    <Label text="Gestión de Inventario" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <TextField fx:id="txtNombre" promptText="Nombre del producto"/>
+        <TextField fx:id="txtPrecio" promptText="Precio ($)"/>
+        <TextField fx:id="txtStock" promptText="Cantidad Stock"/>
+        <Button text="Guardar Producto" onAction="#handleGuardarProducto" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
+
+    <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colNombre" text="Producto" prefWidth="250"/>
+            <TableColumn fx:id="colPrecio" text="Precio ($)" prefWidth="120"/>
+            <TableColumn fx:id="colStock" text="Stock" prefWidth="120"/>
+        </columns>
+    </TableView>
+</VBox>
