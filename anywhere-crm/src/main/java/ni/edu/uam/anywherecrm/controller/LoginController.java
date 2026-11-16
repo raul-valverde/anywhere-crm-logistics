@@ -43,7 +43,7 @@ public class LoginController {
                 mostrarAlerta("Acceso Denegado", "Usuario o contraseña incorrectos", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
-            mostrarAlerta("Error de Conexión", "No se pudo conectar a la base de datos: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error de Conexión", "No se pudo conectar a la base de datos o con la vista: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
