@@ -13,6 +13,7 @@ public class Proforma {
 
     private LocalDate fechaEmision;
     private Double montoEstimado;
+    private String estado; //los estados son pendiente, facturada y anulada
 
     @ManyToOne // Muchas proformas (cotizaciones) pueden ser para UN solo cliente
     @JoinColumn(name = "cliente_id")
@@ -34,4 +35,6 @@ public class Proforma {
     public void setCliente(Cliente cliente) { this.cliente = cliente; }
     public Usuario getVendedor() { return vendedor; }
     public void setVendedor(Usuario vendedor) { this.vendedor = vendedor; }
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 }

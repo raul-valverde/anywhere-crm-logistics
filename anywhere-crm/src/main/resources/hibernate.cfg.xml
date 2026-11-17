@@ -32,5 +32,6 @@
         <mapping class="ni.edu.uam.anywherecrm.model.DetalleOrden"/>
         <mapping class="ni.edu.uam.anywherecrm.model.Despacho"/>
         <mapping class="ni.edu.uam.anywherecrm.model.MovimientoInventario"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.DetalleProforma"/>
     </session-factory>
 </hibernate-configuration>
