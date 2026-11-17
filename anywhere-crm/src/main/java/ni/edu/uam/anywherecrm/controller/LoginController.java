@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import ni.edu.uam.anywherecrm.config.HibernateUtil;
 import ni.edu.uam.anywherecrm.model.Usuario;
 import org.hibernate.Session;
+import ni.edu.uam.anywherecrm.util.Sesion;
 
 import java.io.IOException;
 
@@ -38,6 +39,7 @@ public class LoginController {
 
             if (usuario != null) {
                 mostrarAlerta("Bienvenido", "Inicio de sesión exitoso como: " + usuario.getRol(), Alert.AlertType.INFORMATION);
+                Sesion.iniciar(usuario);
                 abrirVistaSegunRol(usuario.getRol());
             } else {
                 mostrarAlerta("Acceso Denegado", "Usuario o contraseña incorrectos", Alert.AlertType.ERROR);
@@ -49,14 +51,8 @@ public class LoginController {
 
     // Redirecciona la pantalla segun el nivel de acceso del usuario
     private void abrirVistaSegunRol(String rol) {
-        String vista = "inventario-view.fxml"; // Vista predeterminada
-        if ("ADMIN".equalsIgnoreCase(rol) || "VENDEDOR".equalsIgnoreCase(rol)) {
-            vista = "clientes-view.fxml";
-        } else if ("BODEGUERO".equalsIgnoreCase(rol)) {
-            vista = "inventario-view.fxml";
-        } else if ("DESPACHADOR".equalsIgnoreCase(rol)) {
-            vista = "reportes-view.fxml";
-        }
+        String vista = "menu-view.fxml"; // El menú decide qué módulos ve cada rol
+
 
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/" + vista));
