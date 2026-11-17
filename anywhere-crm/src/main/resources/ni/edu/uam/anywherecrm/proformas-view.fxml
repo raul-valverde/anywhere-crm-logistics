@@ -32,7 +32,6 @@ bold;"/>
                          prefWidth="110"/>
         </columns>
     </TableView>
-    <Label fx:id="lblTotal" text="Total: $0.00" style="-fx-font-size: 14px; -
-fx-font-weight: bold;"/>
+    <Label fx:id="lblTotal" text="Total: $0.00" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
 </VBox>
 
