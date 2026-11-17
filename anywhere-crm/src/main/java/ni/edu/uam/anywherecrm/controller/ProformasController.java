@@ -2,6 +2,11 @@ package ni.edu.uam.anywherecrm.controller;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import java.io.IOException;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ni.edu.uam.anywherecrm.dao.ProformaDAO;
@@ -71,6 +76,23 @@ public class ProformasController {
         double total = proforma.getMontoEstimado() == null ? 0 :
                 proforma.getMontoEstimado();
         lblTotal.setText(String.format("Total: $%.2f", total));
+    }
+    // Abre el formulario de nueva proforma y recarga la lista al cerrarlo
+    @FXML
+    private void handleNuevaProforma() {
+        try {
+            FXMLLoader loader = new
+                    FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/proforma-formview.fxml"));
+            Stage ventana = new Stage();
+            ventana.setTitle("Anywhere CRM - Nueva proforma");
+            ventana.setScene(new Scene(loader.load(), 750, 550));
+            ventana.initModality(Modality.APPLICATION_MODAL); // Bloquea esta pantalla hasta cerrar el formulario
+            ventana.showAndWait();
+            cargarProformas();
+        } catch (IOException e) {
+            mostrarAlerta("Error", "No se pudo abrir el formulario: " +
+                    e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
     // Solo se pueden anular proformas que siguen pendientes
     @FXML
