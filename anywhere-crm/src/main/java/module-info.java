@@ -19,4 +19,11 @@ module ni.edu.uam.anywherecrm {
     opens ni.edu.uam.anywherecrm.model to org.hibernate.orm.core, javafx.base;
 
     exports ni.edu.uam.anywherecrm;
+    
+    // JasperReports para generar los PDF
+    requires jasperreports;
+    requires org.apache.commons.logging;      // Jasper la usa para sus mensajes
+    requires org.apache.commons.collections4; // Jasper la usa internamente
+    requires org.apache.commons.beanutils;    // Jasper la usa para leer los campos
+    requires com.github.librepdf.openpdf;     // Jasper la usa para escribir el PDF
 }
