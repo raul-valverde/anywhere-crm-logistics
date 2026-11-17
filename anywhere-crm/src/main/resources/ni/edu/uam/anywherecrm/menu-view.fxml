@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="ni.edu.uam.anywherecrm.controller.MenuController"
+      alignment="CENTER" spacing="15" style="-fx-padding: 30;">
+    <Label text="Anywhere CRM - Menú Principal" style="-fx-font-size: 20px; -
+fx-font-weight: bold;"/>
+    <Label fx:id="lblBienvenida"/>
+    <Button fx:id="btnClientes" text="Clientes" onAction="#abrirClientes"
+            prefWidth="220"/>
+    <Button fx:id="btnProformas" text="Proformas" onAction="#abrirProformas"
+            prefWidth="220"/>
+    <Button fx:id="btnInventario" text="Inventario"
+            onAction="#abrirInventario" prefWidth="220"/>
+    <Button fx:id="btnReportes" text="Reportes" onAction="#abrirReportes"
+            prefWidth="220"/>
+    <Button text="Cerrar sesión" onAction="#handleCerrarSesion"
+            prefWidth="220"
+            style="-fx-background-color: #757575; -fx-text-fill: white;"/>
+</VBox>
+

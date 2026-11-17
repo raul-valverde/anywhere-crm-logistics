@@ -20,6 +20,12 @@ public class Despacho {
     @JoinColumn(name = "repartidor_id") // Nombre de la Clave Foránea (FK) en la base de datos
     private Usuario repartidor;
 
+    @ManyToOne // Cada despacho corresponde a UNA orden (factura)
+    @JoinColumn(name = "orden_id")
+    private Orden orden;
+
+    private String tipo; // RUTA (sale en camión) o RETIRO (el cliente llega a bodega)
+
     public Despacho() {}
 
     // Getters y Setters
@@ -34,4 +40,11 @@ public class Despacho {
     public void setFechaDespacho(LocalDate fechaDespacho) { this.fechaDespacho = fechaDespacho; }
     public Usuario getRepartidor() { return repartidor; }
     public void setRepartidor(Usuario repartidor) { this.repartidor = repartidor; }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
+    public Orden getOrden() { return orden; }
+    public void setOrden(Orden orden) { this.orden = orden; }
+    // Un retiro en bodega no necesita ruta ni repartidor
+    public boolean esRetiro() { return "RETIRO".equals(tipo); }
+
 }
