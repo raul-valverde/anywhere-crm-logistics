@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="factura" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <!-- Datos de la cabecera: llegan desde FacturaReporte como parámetros -->
+    <parameter name="NUMERO_FACTURA" class="java.lang.String"/>
+    <parameter name="FECHA" class="java.lang.String"/>
+    <parameter name="CLIENTE" class="java.lang.String"/>
+    <parameter name="VENDEDOR" class="java.lang.String"/>
+    <parameter name="TOTAL" class="java.lang.Double"/>
+
+    <!-- Columnas de cada fila: una por producto de la factura -->
+    <field name="producto" class="java.lang.String"/>
+    <field name="cantidad" class="java.lang.Integer"/>
+    <field name="precio" class="java.lang.Double"/>
+    <field name="subtotal" class="java.lang.Double"/>
+
+    <title>
+        <band height="110">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="30"/>
+                <textElement>
+                    <font size="20" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Anywhere CRM Logistics]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="35" width="300" height="20"/>
+                <textElement>
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Factura #" + $P{NUMERO_FACTURA}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="60" width="300" height="18"/>
+                <textFieldExpression><![CDATA["Cliente: " + $P{CLIENTE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="80" width="300" height="18"/>
+                <textFieldExpression><![CDATA["Vendedor: " + $P{VENDEDOR}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="355" y="60" width="200" height="18"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Fecha: " + $P{FECHA}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="22">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="255" height="22" backcolor="#E3F2FD"/>
+                <textElement verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Producto]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="255" y="0" width="80" height="22" backcolor="#E3F2FD"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Cantidad]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="335" y="0" width="110" height="22" backcolor="#E3F2FD"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Precio ($)]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="445" y="0" width="110" height="22" backcolor="#E3F2FD"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Subtotal ($)]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="255" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="255" y="0" width="80" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="335" y="0" width="110" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{precio}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="445" y="0" width="110" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <summary>
+        <band height="40">
+            <staticText>
+                <reportElement x="335" y="10" width="110" height="22"/>
+                <textElement textAlignment="Right">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total ($)]]></text>
+            </staticText>
+            <textField pattern="#,##0.00">
+                <reportElement x="445" y="10" width="110" height="22"/>
+                <textElement textAlignment="Right">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{TOTAL}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>
