@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Configuración de conexión a PostgreSQL en Neon.tech -->
+        <property name="connection.driver_class">org.postgresql.Driver</property>
+        <!-- Configuración de conexión a PostgreSQL en Neon.tech -->
+        <property name="connection.url">jdbc:postgresql://ep-snowy-bird-bbgomf26-pooler.c-15.us-east-1.aws.neon.tech:5432/Anywhere-CRM-DB?sslmode=require</property>
+        <property name="connection.username">neondb_owner</property>
+        <property name="connection.password"><!--Escribe la contraseña aca--></property>
+        <!-- NUNCA SUBIR LA CONTRASEÑA AL REPOSITORIO-->
+
+        <!-- Dialecto de PostgreSQL -->
+        <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Mostrar las consultas SQL en la consola (útil para ver qué hace) -->
+        <property name="show_sql">true</property>
+        <property name="format_sql">true</property>
+
+        <!-- Crea o actualiza las tablas automáticamente al ejecutar -->
+        <property name="hbm2ddl.auto">update</property>
+
+        <!-- Mapeo de tus Clases/Tablas (Deben estar todas las de tu modelo) -->
+        <mapping class="ni.edu.uam.anywherecrm.model.Usuario"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.Producto"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.Categoria"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.Cliente"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.Proforma"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.Orden"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.DetalleOrden"/>
+        <mapping class="ni.edu.uam.anywherecrm.model.Despacho"/>
+    </session-factory>
+</hibernate-configuration>
