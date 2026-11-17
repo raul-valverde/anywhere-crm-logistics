@@ -32,7 +32,7 @@ public class MenuController {
             "Clientes"); }
     @FXML private void abrirProformas() { abrirVentana("proformas-view.fxml",
             "Proformas"); }
-    @FXML private void abrirInventario() { abrirVentana("inventarioview.fxml", "Inventario"); }
+    @FXML private void abrirInventario() { abrirVentana("inventario-view.fxml", "Inventario"); }
     @FXML private void abrirReportes() { abrirVentana("reportes-view.fxml",
             "Reportes"); }
     // Abre el módulo en una ventana aparte para que el menú siga abierto
@@ -55,7 +55,7 @@ public class MenuController {
         Sesion.cerrar();
         try {
             FXMLLoader loader = new
-                    FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/loginview.fxml"));
+                    FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/login-view.fxml"));
             Stage stage = (Stage) lblBienvenida.getScene().getWindow();
             stage.setScene(new Scene(loader.load(), 400, 400));
         } catch (IOException e) {
