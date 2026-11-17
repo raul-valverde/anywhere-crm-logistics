@@ -15,7 +15,7 @@ module ni.edu.uam.anywherecrm {
     opens ni.edu.uam.anywherecrm to javafx.fxml;
     opens ni.edu.uam.anywherecrm.controller to javafx.fxml;
 
-    // Permisos para que Hibernate cree las tablas desde tus entidades
+    // Permisos combinados: JavaFX (para las tablas) e Hibernate (para la BD) acceden al modelo
     opens ni.edu.uam.anywherecrm.model to org.hibernate.orm.core, javafx.base;
 
     exports ni.edu.uam.anywherecrm;
