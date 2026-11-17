@@ -7,6 +7,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ni.edu.uam.anywherecrm.dao.GenericDAO;
 import ni.edu.uam.anywherecrm.model.Producto;
+import javafx.beans.property.SimpleStringProperty;
+import ni.edu.uam.anywherecrm.dao.InventarioDAO;
+import ni.edu.uam.anywherecrm.model.MovimientoInventario;
+import java.time.LocalDateTime;
 
 public class InventarioController {
 
@@ -19,7 +23,17 @@ public class InventarioController {
     @FXML private TableColumn<Producto, Long> colId;
     @FXML private TableColumn<Producto, String> colNombre;
     @FXML private TableColumn<Producto, Double> colPrecio;
-    @FXML private TableColumn<Producto, Integer> colStock;
+    @FXML private TableColumn<Producto, Integer> colStock;// Componentes del formulario de movimientos
+    @FXML private TextField txtCantidadMov;
+    @FXML private TextField txtMotivo;
+    @FXML private TableView<MovimientoInventario> tablaMovimientos;
+    @FXML private TableColumn<MovimientoInventario, LocalDateTime> colMovFecha;
+    @FXML private TableColumn<MovimientoInventario, String> colMovProducto;
+    @FXML private TableColumn<MovimientoInventario, String> colMovTipo;
+    @FXML private TableColumn<MovimientoInventario, Integer> colMovCantidad;
+    @FXML private TableColumn<MovimientoInventario, String> colMovMotivo;
+
+    private final InventarioDAO inventarioDAO = new InventarioDAO();
 
     // Instancia del DAO generico para gestionar Productos en PostgreSQL
     private final GenericDAO<Producto> productoDAO = new GenericDAO<>(Producto.class);
@@ -34,6 +48,8 @@ public class InventarioController {
         colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
 
         cargarDatos();
+        configurarTablaMovimientos();
+        cargarMovimientos();
     }
 
     // Carga los productos guardados en la BD PostgreSQL a la tabla
@@ -81,7 +97,57 @@ public class InventarioController {
             mostrarAlerta("Error de BD", "No se pudo guardar el producto: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+    private void configurarTablaMovimientos() {
+        colMovFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
+        colMovTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
+        colMovCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colMovMotivo.setCellValueFactory(new PropertyValueFactory<>("motivo"));
+        colMovProducto.setCellValueFactory(fila -> new SimpleStringProperty(
+                fila.getValue().getProducto().getNombre()));
+    }
 
+    private void cargarMovimientos() {
+        tablaMovimientos.setItems(FXCollections.observableArrayList(inventarioDAO.obtenerMovimientos()));
+    }
+
+    @FXML
+    private void handleRegistrarEntrada() {
+        registrarMovimiento("ENTRADA");
+    }
+
+    @FXML
+    private void handleRegistrarSalida() {
+        registrarMovimiento("SALIDA");
+    }
+
+    // Usa el producto seleccionado en la tabla de arriba
+    private void registrarMovimiento(String tipo) {
+        Producto producto = tablaProductos.getSelectionModel().getSelectedItem();
+        if (producto == null) {
+            mostrarAlerta("Sin selección", "Selecciona un producto de la tabla", Alert.AlertType.WARNING);
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(txtCantidadMov.getText().trim());
+        } catch (NumberFormatException e) {
+            mostrarAlerta("Error de Formato", "La cantidad debe ser un número entero", Alert.AlertType.ERROR);
+            return;
+        }
+
+        String motivo = txtMotivo.getText().trim();
+        try {
+            inventarioDAO.registrarMovimiento(producto.getId(), tipo, cantidad, motivo.isEmpty() ? tipo : motivo);
+            txtCantidadMov.clear();
+            txtMotivo.clear();
+            cargarDatos();
+            cargarMovimientos();
+            mostrarAlerta("Éxito", tipo + " registrada para " + producto.getNombre(), Alert.AlertType.INFORMATION);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            mostrarAlerta("No se pudo registrar", e.getMessage(), Alert.AlertType.WARNING);
+        }
+    }
     private void limpiarFormulario() {
         txtNombre.clear();
         txtPrecio.clear();

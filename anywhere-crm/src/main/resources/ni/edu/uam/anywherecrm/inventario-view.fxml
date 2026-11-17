@@ -23,6 +23,27 @@
             <TableColumn fx:id="colStock" text="Stock" prefWidth="120"/>
         </columns>
     </TableView>
+    
+    <Label text="Movimientos de bodega (selecciona un producto arriba)" style="-fx-font-weight: bold;"/>
+
+    <HBox spacing="10">
+        <TextField fx:id="txtCantidadMov" promptText="Cantidad"/>
+        <TextField fx:id="txtMotivo" promptText="Motivo (opcional)"/>
+        <Button text="Registrar entrada" onAction="#handleRegistrarEntrada"
+                style="-fx-background-color: #1976D2; -fx-text-fill: white;"/>
+        <Button text="Registrar salida" onAction="#handleRegistrarSalida"
+                style="-fx-background-color: #F57C00; -fx-text-fill: white;"/>
+    </HBox>
+
+    <TableView fx:id="tablaMovimientos" prefHeight="180">
+        <columns>
+            <TableColumn fx:id="colMovFecha" text="Fecha" prefWidth="160"/>
+            <TableColumn fx:id="colMovProducto" text="Producto" prefWidth="180"/>
+            <TableColumn fx:id="colMovTipo" text="Tipo" prefWidth="90"/>
+            <TableColumn fx:id="colMovCantidad" text="Cantidad" prefWidth="80"/>
+            <TableColumn fx:id="colMovMotivo" text="Motivo" prefWidth="180"/>
+        </columns>
+    </TableView>
 </VBox>
 
 
