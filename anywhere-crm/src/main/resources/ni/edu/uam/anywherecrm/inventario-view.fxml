@@ -18,6 +18,9 @@
     </HBox>
 
     <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
             <TableColumn fx:id="colNombre" text="Producto" prefWidth="250"/>
@@ -38,6 +41,9 @@
     </HBox>
 
     <TableView fx:id="tablaMovimientos" prefHeight="180">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
         <columns>
             <TableColumn fx:id="colMovFecha" text="Fecha" prefWidth="160"/>
             <TableColumn fx:id="colMovProducto" text="Producto" prefWidth="180"/>

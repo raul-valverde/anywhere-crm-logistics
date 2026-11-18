@@ -15,6 +15,9 @@
         <Button text="Facturar" onAction="#handleFacturar" style="-fx-background-color: #1976D2; -fx-text-fill: white; -fx-font-weight: bold;"/>
     </HBox>
     <TableView fx:id="tablaProformas" prefHeight="220">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
             <TableColumn fx:id="colCliente" text="Cliente" prefWidth="200"/>
@@ -25,6 +28,9 @@
     </TableView>
     <Label text="Productos de la proforma" style="-fx-font-weight: bold;"/>
     <TableView fx:id="tablaDetalles" VBox.vgrow="ALWAYS">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
         <columns>
             <TableColumn fx:id="colProducto" text="Producto" prefWidth="220"/>
             <TableColumn fx:id="colCantidad" text="Cantidad" prefWidth="90"/>
