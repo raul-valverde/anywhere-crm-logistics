@@ -12,6 +12,12 @@ import ni.edu.uam.anywherecrm.dao.InventarioDAO;
 import ni.edu.uam.anywherecrm.model.MovimientoInventario;
 import java.time.LocalDateTime;
 
+import javafx.stage.FileChooser;
+import javafx.util.StringConverter;
+import ni.edu.uam.anywherecrm.model.Categoria;
+import ni.edu.uam.anywherecrm.reportes.ReporteInventario;
+import java.io.File;
+
 public class InventarioController {
 
     // Componentes mapeados desde el FXML
@@ -35,9 +41,16 @@ public class InventarioController {
 
     private final InventarioDAO inventarioDAO = new InventarioDAO();
 
+    // Categoría del producto y reporte de inventario en PDF
+    @FXML private ComboBox<Categoria> cbCategoria;
+    @FXML private TableColumn<Producto, String> colCategoria;
+    private final GenericDAO<Categoria> categoriaDAO = new GenericDAO<>(Categoria.class);
+    private final ReporteInventario reporteInventario = new ReporteInventario();
+
     // Instancia del DAO generico para gestionar Productos en PostgreSQL
     private final GenericDAO<Producto> productoDAO = new GenericDAO<>(Producto.class);
     private final ObservableList<Producto> listaProductos = FXCollections.observableArrayList();
+
 
     @FXML
     public void initialize() {
@@ -46,6 +59,10 @@ public class InventarioController {
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colPrecio.setCellValueFactory(new PropertyValueFactory<>("precio"));
         colStock.setCellValueFactory(new PropertyValueFactory<>("stock"));
+
+        colCategoria.setCellValueFactory(fila -> new SimpleStringProperty(
+                fila.getValue().getCategoria() != null ? fila.getValue().getCategoria().getNombre() : "Sin categoría"));
+        configurarCategorias();
 
         cargarDatos();
         configurarTablaMovimientos();
@@ -83,6 +100,8 @@ public class InventarioController {
             producto.setNombre(nombre);
             producto.setPrecio(precio);
             producto.setStock(stock);
+
+            producto.setCategoria(cbCategoria.getValue()); // Puede quedar sin categoría
 
             productoDAO.guardar(producto);
 
@@ -152,6 +171,47 @@ public class InventarioController {
         txtNombre.clear();
         txtPrecio.clear();
         txtStock.clear();
+        cbCategoria.setValue(null);
+    }
+
+    // Llena el ComboBox de categorías mostrando su nombre
+    private void configurarCategorias() {
+        cbCategoria.setItems(FXCollections.observableArrayList(categoriaDAO.obtenerTodos()));
+        cbCategoria.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Categoria categoria) {
+                return categoria == null ? "" : categoria.getNombre();
+            }
+
+            @Override
+            public Categoria fromString(String texto) {
+                return null;
+            }
+        });
+    }
+
+    // Genera el PDF con el stock y el valor de cada producto
+    @FXML
+    private void handlePdfInventario() {
+        if (listaProductos.isEmpty()) {
+            mostrarAlerta("Sin productos", "No hay productos para el reporte", Alert.AlertType.WARNING);
+            return;
+        }
+
+        FileChooser selector = new FileChooser();
+        selector.setTitle("Guardar reporte de inventario");
+        selector.setInitialFileName("Inventario-" + java.time.LocalDate.now() + ".pdf");
+        selector.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
+
+        File destino = selector.showSaveDialog(tablaProductos.getScene().getWindow());
+        if (destino == null) return; // El usuario canceló
+
+        try {
+            reporteInventario.generarPdf(listaProductos, destino);
+            mostrarAlerta("PDF generado", "Reporte guardado en:\n" + destino.getAbsolutePath(), Alert.AlertType.INFORMATION);
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo generar el PDF: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     // Metodo auxiliar para desplegar ventanas de alerta emergentes

@@ -12,18 +12,20 @@
         <TextField fx:id="txtNombre" promptText="Nombre del producto"/>
         <TextField fx:id="txtPrecio" promptText="Precio ($)"/>
         <TextField fx:id="txtStock" promptText="Cantidad Stock"/>
+        <ComboBox fx:id="cbCategoria" promptText="Categoría" prefWidth="150"/>
         <Button text="Guardar Producto" onAction="#handleGuardarProducto" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="PDF de inventario" onAction="#handlePdfInventario" style="-fx-background-color: #1976D2; -fx-text-fill: white;"/>
     </HBox>
 
     <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
             <TableColumn fx:id="colNombre" text="Producto" prefWidth="250"/>
+            <TableColumn fx:id="colCategoria" text="Categoría" prefWidth="150"/>
             <TableColumn fx:id="colPrecio" text="Precio ($)" prefWidth="120"/>
             <TableColumn fx:id="colStock" text="Stock" prefWidth="120"/>
         </columns>
     </TableView>
-    
     <Label text="Movimientos de bodega (selecciona un producto arriba)" style="-fx-font-weight: bold;"/>
 
     <HBox spacing="10">
@@ -45,5 +47,3 @@
         </columns>
     </TableView>
 </VBox>
-
-
