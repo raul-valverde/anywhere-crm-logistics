@@ -5,6 +5,7 @@ import ni.edu.uam.anywherecrm.model.DetalleOrden;
 import ni.edu.uam.anywherecrm.model.Orden;
 import org.hibernate.Session;
 
+import java.time.LocalDate;
 import java.util.List;
 
 // Consultas de facturas (en la base de datos una factura es una Orden)
@@ -22,6 +23,17 @@ public class FacturaDAO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM DetalleOrden d WHERE d.orden.id = :id", DetalleOrden.class)
                     .setParameter("id", ordenId)
+                    .list();
+        }
+    }
+    // Facturas COMPLETADAS entre dos fechas (incluidas), para el reporte de ventas
+    public List<Orden> obtenerFacturasEntre(LocalDate desde, LocalDate hasta)
+    {
+        try (Session session =
+                     HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                    "FROM Orden o WHERE o.estado = 'COMPLETED' AND o.fecha BETWEEN :desde AND :hasta " + "ORDER BY o.fecha, o.id", Orden.class).setParameter("desde", desde)
+                    .setParameter("hasta", hasta)
                     .list();
         }
     }

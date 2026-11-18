@@ -17,4 +17,12 @@
 
     <Label text="Consulta HQL 2: Total Vendido por Vendedor (Órdenes Completadas)" style="-fx-font-weight: bold; -fx-text-fill: #1976D2;"/>
     <ListView fx:id="listVentasVendedor" prefHeight="160"/>
+    <Label text="Reporte de ventas en PDF (JasperReports)" style="-fx-fontweight: bold; -fx-text-fill: #1976D2;"/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Desde:"/>
+        <DatePicker fx:id="dpDesde" prefWidth="130"/>
+        <Label text="Hasta:"/>
+        <DatePicker fx:id="dpHasta" prefWidth="130"/>
+        <Button text="PDF de ventas" onAction="#handlePdfVentas" style="-fxbackground-color: #1976D2; -fx-text-fill: white; -fx-font-weight: bold;"/>
+    </HBox>
 </VBox>
