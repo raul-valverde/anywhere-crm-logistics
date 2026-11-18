@@ -15,6 +15,11 @@ fx-font-weight: bold;"/>
             onAction="#abrirInventario" prefWidth="220"/>
     <Button fx:id="btnReportes" text="Reportes" onAction="#abrirReportes"
             prefWidth="220"/>
+    <Button fx:id="btnFacturas" text="Facturas" onAction="#abrirFacturas"
+            prefWidth="220"/>
+    <Button fx:id="btnDespachos" text="Despachos" onAction="#abrirDespachos"
+            prefWidth="220"/>
+
     <Button text="Cerrar sesión" onAction="#handleCerrarSesion"
             prefWidth="220"
             style="-fx-background-color: #757575; -fx-text-fill: white;"/>

@@ -17,6 +17,9 @@ public class MenuController {
     @FXML private Button btnProformas;
     @FXML private Button btnInventario;
     @FXML private Button btnReportes;
+    @FXML private Button btnFacturas;
+    @FXML private Button btnDespachos;
+
     @FXML
     public void initialize() {
         Usuario usuario = Sesion.getUsuarioActual();
@@ -27,6 +30,8 @@ public class MenuController {
         btnProformas.setDisable(!Sesion.tieneRol("ADMIN", "VENDEDOR"));
         btnInventario.setDisable(!Sesion.tieneRol("ADMIN", "BODEGUERO"));
         btnReportes.setDisable(!Sesion.tieneRol("ADMIN", "DESPACHADOR"));
+        btnFacturas.setDisable(!Sesion.tieneRol("ADMIN", "VENDEDOR"));
+        btnDespachos.setDisable(!Sesion.tieneRol("ADMIN", "DESPACHADOR"));
     }
     @FXML private void abrirClientes() { abrirVentana("clientes-view.fxml",
             "Clientes"); }
@@ -35,6 +40,11 @@ public class MenuController {
     @FXML private void abrirInventario() { abrirVentana("inventario-view.fxml", "Inventario"); }
     @FXML private void abrirReportes() { abrirVentana("reportes-view.fxml",
             "Reportes"); }
+    @FXML private void abrirFacturas() { abrirVentana("facturas-view.fxml",
+            "Facturas"); }
+    @FXML private void abrirDespachos() { abrirVentana("despachos-view.fxml",
+            "Despachos"); }
+
     // Abre el módulo en una ventana aparte para que el menú siga abierto
     private void abrirVentana(String fxml, String titulo) {
         try {
