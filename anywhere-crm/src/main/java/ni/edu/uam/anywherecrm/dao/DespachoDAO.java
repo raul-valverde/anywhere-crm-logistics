@@ -5,6 +5,7 @@ import ni.edu.uam.anywherecrm.model.Orden;
 import ni.edu.uam.anywherecrm.model.Usuario;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import ni.edu.uam.anywherecrm.model.RutaEntrega;
 import java.util.List;
 // Consultas y operaciones de los despachos (ruta en camión o retiro en bodega)
 public class DespachoDAO {
@@ -61,6 +62,27 @@ public class DespachoDAO {
                 despacho.setEstado(siguiente);
                 tx.commit();
                 return siguiente;
+            } catch (RuntimeException e) {
+                tx.rollback();
+                throw e;
+            }
+        }
+    }
+    // Guarda la ruta y le asigna sus despachos en el orden de visita, todo en UNA transacción
+    public void guardarRuta(RutaEntrega ruta, List<Despacho> despachosEnOrden) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
+            try {
+                session.persist(ruta);
+                int parada = 1;
+                for (Despacho d : despachosEnOrden) {
+                    Despacho despacho = session.find(Despacho.class, d.getId());
+                    despacho.setRuta(ruta);
+                    despacho.setOrdenParada(parada);
+                    despacho.setRutaAsignada("Ruta #" + ruta.getId() + " - parada " + parada + " de " + despachosEnOrden.size());
+                    parada++;
+                }
+                tx.commit();
             } catch (RuntimeException e) {
                 tx.rollback();
                 throw e;

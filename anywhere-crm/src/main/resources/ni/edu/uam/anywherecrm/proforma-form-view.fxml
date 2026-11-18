@@ -16,7 +16,7 @@ bold;"/>
                   prefWidth="330"/>
         <TextField fx:id="txtCantidad" promptText="Cantidad" prefWidth="90"
                    onAction="#handleAgregar"/>
-        <Button text="Agregar" onAction="#handleAgregar" style="-fxbackground-color: #1976D2; -fx-text-fill: white;"/>
+        <Button text="Agregar" onAction="#handleAgregar" style="-fx-background-color: #1976D2; -fx-text-fill: white;"/>
         <Button text="Quitar" onAction="#handleQuitar"/>
     </HBox>
     <TableView fx:id="tablaLineas" VBox.vgrow="ALWAYS">
@@ -36,7 +36,7 @@ bold;"/>
     <HBox spacing="10" alignment="CENTER_RIGHT">
         <Label fx:id="lblTotal" text="Total: $0.00" style="-fx-font-size:
 14px; -fx-font-weight: bold;"/>
-        <Button text="Guardar proforma" onAction="#handleGuardar" style="-fxbackground-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
+        <Button text="Guardar proforma" onAction="#handleGuardar" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold;"/>
         <Button text="Cancelar" onAction="#handleCancelar"/>
     </HBox>
 </VBox>
