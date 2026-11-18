@@ -90,7 +90,7 @@ public class ProformasController {
     private void handleNuevaProforma() {
         try {
             FXMLLoader loader = new
-                    FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/proforma-formview.fxml"));
+                    FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/proforma-form-view.fxml"));
             Stage ventana = new Stage();
             ventana.setTitle("Anywhere CRM - Nueva proforma");
             ventana.setScene(new Scene(loader.load(), 750, 550));

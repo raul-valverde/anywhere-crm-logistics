@@ -26,4 +26,8 @@ module ni.edu.uam.anywherecrm {
     requires org.apache.commons.collections4; // Jasper la usa internamente
     requires org.apache.commons.beanutils;    // Jasper la usa para leer los campos
     requires com.github.librepdf.openpdf;     // Jasper la usa para escribir el PDF
+
+    // API de rutas: lectura de JSON y abrir el mapa en el navegador
+    requires com.fasterxml.jackson.databind;
+    requires java.desktop;
 }
