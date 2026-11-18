@@ -66,33 +66,46 @@ public class ClientesController {
         String email = txtEmail.getText().trim();
         cliente.setEmail(email.isEmpty() ? null : email); // null evita choques con la columna unique
 
-        if (esNuevo) {
-            clienteDAO.guardar(cliente);
-        } else {
-            clienteDAO.actualizar(cliente);
-        }
-
-        limpiarFormulario();
-        cargarDatos();
-        mostrarAlerta("Éxito", esNuevo ? "Cliente registrado" : "Cliente actualizado", Alert.AlertType.INFORMATION);
-    }
-
-    // Elimina el cliente seleccionado después de pedir confirmación
-    @FXML
-    private void handleEliminar() {
-        if (clienteSeleccionado == null) {
-            mostrarAlerta("Sin selección", "Selecciona un cliente de la tabla", Alert.AlertType.WARNING);
-            return;
-        }
-        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION,
-                "¿Eliminar a " + clienteSeleccionado.getNombre() + "?", ButtonType.OK, ButtonType.CANCEL);
-        confirmacion.setHeaderText(null);
-        if (confirmacion.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
-            clienteDAO.eliminar(clienteSeleccionado);
+        try {
+            if (esNuevo) {
+                clienteDAO.guardar(cliente);
+            } else {
+                clienteDAO.actualizar(cliente);
+            }
             limpiarFormulario();
             cargarDatos();
+            mostrarAlerta("Éxito", esNuevo ? "Cliente registrado" : "Cliente actualizado", Alert.AlertType.INFORMATION);
+        } catch (RuntimeException e) {
+            cargarDatos(); // Vuelve a mostrar los datos reales de la BD
+            mostrarAlerta("Error de BD", "No se pudo guardar el cliente: " +
+                    e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+
+
+        // Elimina el cliente seleccionado después de pedir confirmación
+        @FXML
+        private void handleEliminar() {
+            if (clienteSeleccionado == null) {
+                mostrarAlerta("Sin selección", "Selecciona un cliente de la tabla", Alert.AlertType.WARNING);
+                return;
+            }
+            Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION,
+                    "¿Eliminar a " + clienteSeleccionado.getNombre() + "?", ButtonType.OK, ButtonType.CANCEL);
+            confirmacion.setHeaderText(null);
+            if (confirmacion.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                try {
+                    clienteDAO.eliminar(clienteSeleccionado);
+                    limpiarFormulario();
+                    cargarDatos();
+                } catch (RuntimeException e) {
+                    // La BD no deja borrar un cliente que ya tiene proformas o facturas
+                    mostrarAlerta("No se puede eliminar",
+                            "El cliente tiene proformas o facturas registradas, por eso no se puede borrar.",
+                            Alert.AlertType.WARNING);
+                }
+            }
+        }
 
     // Filtra la tabla por nombre sin volver a consultar la base de datos
     @FXML
