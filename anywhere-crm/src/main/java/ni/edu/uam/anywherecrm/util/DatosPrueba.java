@@ -10,18 +10,23 @@ import org.hibernate.query.Page;
 import java.util.List;
 // Llena la base de datos con ejemplos solo donde está vacía, para probar y hacer la demo
         public class DatosPrueba {
-            public static void cargarSiEstaVacio() {
-                try {
-                    crearUsuarios();
-                    crearProductos();
-                    crearClientes();
-                    crearProformaEjemplo();
-                } catch (Exception e) {
-                    System.err.println("No se pudieron cargar los datos de prueba: "
-                            + e.getMessage());
-                }
-            }
-            // Un usuario de prueba por cada rol
+    // Cada paso va por separado: si uno falla, los demás igual se intentan
+    public static void cargarSiEstaVacio() {
+        ejecutar("usuarios", DatosPrueba::crearUsuarios);
+        ejecutar("productos", DatosPrueba::crearProductos);
+        ejecutar("clientes", DatosPrueba::crearClientes);
+        ejecutar("proforma de ejemplo", DatosPrueba::crearProformaEjemplo);
+    }
+    private static void ejecutar(String paso, Runnable accion) {
+        try {
+            accion.run();
+        } catch (Exception e) {
+            System.err.println("Datos de prueba (" + paso + "): " +
+                    e.getMessage());
+        }
+    }
+
+    // Un usuario de prueba por cada rol
             private static void crearUsuarios() {
                 crearUsuarioSiNoExiste("admin", "admin123", "ADMIN");
                 crearUsuarioSiNoExiste("vendedor", "vendedor123", "VENDEDOR");
