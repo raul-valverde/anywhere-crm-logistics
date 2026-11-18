@@ -26,7 +26,7 @@ public class ReporteInventario {
 
     public void generarPdf(List<Producto> productos, File destino) throws JRException, IOException {
         // 1. Una fila por producto; el valor es precio x stock
-        List> filas = new ArrayList<>();
+        List<Map<String, ?>> filas = new ArrayList<>();
         for (Producto producto : productos) {
             int stock = producto.getStock() == null ? 0 : producto.getStock();
             double precio = producto.getPrecio() == null ? 0 : producto.getPrecio();
