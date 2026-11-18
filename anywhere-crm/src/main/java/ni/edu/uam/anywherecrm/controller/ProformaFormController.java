@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,6 +16,7 @@ import ni.edu.uam.anywherecrm.model.Cliente;
 import ni.edu.uam.anywherecrm.model.DetalleProforma;
 import ni.edu.uam.anywherecrm.model.Producto;
 import ni.edu.uam.anywherecrm.model.Proforma;
+import ni.edu.uam.anywherecrm.util.Navegacion;
 import ni.edu.uam.anywherecrm.util.Sesion;
 
 // Formulario para crear una proforma, se elige el cliente y se agregan productos con su cantidad
@@ -163,7 +165,11 @@ public class ProformaFormController {
     private void handleCancelar() {
         cerrarVentana();
     }
-
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
+    }
     private void cerrarVentana() {
         Stage ventana = (Stage) tablaLineas.getScene().getWindow();
         ventana.close();

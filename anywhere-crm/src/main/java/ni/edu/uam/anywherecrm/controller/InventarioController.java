@@ -2,6 +2,7 @@ package ni.edu.uam.anywherecrm.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -16,6 +17,8 @@ import javafx.stage.FileChooser;
 import javafx.util.StringConverter;
 import ni.edu.uam.anywherecrm.model.Categoria;
 import ni.edu.uam.anywherecrm.reportes.ReporteInventario;
+import ni.edu.uam.anywherecrm.util.Navegacion;
+
 import java.io.File;
 
 public class InventarioController {
@@ -213,7 +216,11 @@ public class InventarioController {
             mostrarAlerta("Error", "No se pudo generar el PDF: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
-
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
+    }
     // Metodo auxiliar para desplegar ventanas de alerta emergentes
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
         Alert alert = new Alert(tipo);

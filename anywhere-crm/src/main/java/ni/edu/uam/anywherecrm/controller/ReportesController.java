@@ -1,5 +1,6 @@
 package ni.edu.uam.anywherecrm.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.time.LocalDate;
 import javafx.scene.control.ListView;
 import ni.edu.uam.anywherecrm.dao.ReportesDAO;
+import ni.edu.uam.anywherecrm.util.Navegacion;
+
 import java.util.List;
 
 public class ReportesController {
@@ -93,5 +96,10 @@ public class ReportesController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
     }
 }

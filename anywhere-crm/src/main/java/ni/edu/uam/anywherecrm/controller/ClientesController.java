@@ -2,11 +2,14 @@ package ni.edu.uam.anywherecrm.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ni.edu.uam.anywherecrm.dao.GenericDAO;
 import ni.edu.uam.anywherecrm.model.Cliente;
+import ni.edu.uam.anywherecrm.util.Navegacion;
+
 //NOTA IMPORTANTE!! SI UN CLIENTE YA TIENE PROFORMAS O FACTURAS NO DEJA ELIMINARLO
 // Controlador para registrar, buscar, editar y eliminar clientes
 public class ClientesController {
@@ -133,7 +136,11 @@ public class ClientesController {
         txtTelefono.clear();
         txtEmail.clear();
     }
-
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
+    }
     // Nombre obligatorio, email con formato básico y sin repetirse
     private boolean validarFormulario() {
         String nombre = txtNombre.getText().trim();
