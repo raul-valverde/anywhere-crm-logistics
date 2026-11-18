@@ -1,47 +1,82 @@
-# Anywhere CRM - Sistema de Gestión Logística
-
-## Descripción del Proyecto
-Sistema integral de escritorio para la gestión de inventario, proformas, facturación y despachos. El proyecto busca automatizar y optimizar los procesos comerciales y logísticos mediante una interfaz gráfica intuitiva conectada a una base de datos centralizada en la nube.
-
-## Equipo de Desarrollo
-* **[Raúl Valverde](https://github.com/raul-valverde)** - Líder del equipo
-* **[Kellys Bellanger](https://github.com/kellys-bellanger)** - Desarrolladora
-* **[Steven Flores](https://github.com/st3v3n030707 )** - Desarrollador
-* **[Nora Obregon](https://github.com/nora3071)** - Desarrolladora
-
-## Tecnologías Utilizadas
-* **Lenguaje:** Java 21
-* **Interfaz Gráfica:** JavaFX
-* **Persistencia de Datos:** Hibernate ORM
-* **Base de Datos:** PostgreSQL (Alojado en la nube mediante Neon.tech)
-* **Gestor de Dependencias y Build:** Maven
-
-## Arquitectura y Estructura
-El proyecto sigue el patrón de diseño MVC (Modelo-Vista-Controlador) combinado con el patrón DAO (Data Access Object) para separar la lógica de negocio, la interfaz visual y el acceso a la base de datos.
-
-**Paquetes principales (`ni.edu.uam.anywherecrm`):**
-* `config/`: Archivos de configuración y utilidades (ej. `HibernateUtil`).
-* `controller/`: Controladores de las vistas FXML (`LoginController`, `InventarioController`, `ClientesController`, `ReportesController`).
-* `dao/`: Clases encargadas de las transacciones con la base de datos (`GenericDAO`, `ReportesDAO`).
-* `model/`: Entidades mapeadas a la base de datos (`Usuario`, `Producto`, `Categoria`, `Cliente`, `Proforma`, `Orden`, `DetalleOrden`, `Despacho`).
-* `resources/`: Vistas de la aplicación (`login-view.fxml`, `clientes-view.fxml`, `inventario-view.fxml`, `reportes-view.fxml`) y configuración de conexión (`hibernate.cfg.xml`).
-
-## Estado Actual y Avances (Fase 1)
-* [x] Estructuración del proyecto en Maven y creación de paquetes.
-* [x] Modelado de entidades y mapeo objeto-relacional (ORM).
-* [x] Conexión exitosa a la base de datos PostgreSQL en Neon.tech.
-* [x] Creación de las interfaces base (archivos FXML).
-* [x] Implementación funcional del inicio de sesión (Login) con validación de credenciales reales contra la base de datos.
-* [ ] (Pendiente) Desarrollo de la tabla interactiva (TableView) para el módulo de Clientes.
-* [ ] (Pendiente) Desarrollo del CRUD para el módulo de Inventario.
-* [ ] (Pendiente) Revisión con el docente sobre la implementación final de la capa de servicios (Conexión Directa vs API REST con Spring Boot).
-
-## Instrucciones de Ejecución
-1. Clonar el repositorio en el entorno local.
-2. Abrir el proyecto en IntelliJ IDEA (o IDE de preferencia) y recargar los cambios de Maven (`Load Maven Changes`) para descargar el driver de PostgreSQL, Hibernate y JavaFX.
-3. El archivo `hibernate.cfg.xml` ya está configurado para apuntar al clúster de Neon.tech. No se requiere servidor local, **se requiere la contraseña para el programa del equipo
-   si no tiene que cambiar las credenciales a su base de datos**.
-5. Ejecutar la clase `Launcher.java` (o `App.java`).
-6. **Credenciales de acceso de prueba:(En nuestra base de datos)**
-   * **Usuario:** `admin`
-   * **Contraseña:** `admin123`
+# Anywhere CRM Logistics
+Aplicación de escritorio para una empresa de logística: clientes, proformas,
+facturas, inventario, despachos con cálculo de rutas y reportes en PDF.
+Proyecto final de Programación, UAM.
+## Equipo
+| Integrante | Rol |
+| --- | --- |
+| Raúl Valverde | Líder. Clientes, facturas en PDF, API de rutas |
+| Kellys Bellanger | Proformas y reporte de ventas |
+| Steven Flores | Inventario, facturación y reporte de inventario |
+| Nora Obregón | Sesión y menú por rol, despachos, calidad y documentación |
+## Funcionalidades
+- Inicio de sesión y menú que muestra solo los módulos de cada rol (ADMIN,
+  VENDEDOR, BODEGUERO, DESPACHADOR).
+- Clientes: registrar, buscar, editar y eliminar, con validación de email.
+- Inventario: productos con categoría, entradas y salidas de bodega con
+  historial. El stock nunca queda negativo.
+- Proformas: crear con varios productos, consultar, anular y verificar si hay
+  stock.
+- Facturación: convierte una proforma en factura y descuenta la bodega en una
+  sola transacción.
+- Despachos: por ruta en camión (con distancia y tiempo calculados por una
+  API) o por retiro en bodega, con estados PENDIENTE, EN_CAMINO y ENTREGADO.
+- Reportes: consultas HQL en pantalla y tres reportes en PDF con
+  JasperReports (factura, ventas por fechas e inventario).
+## Tecnologías
+- Java 21 con módulos (module-info.java)
+- JavaFX 21 y FXML
+- Hibernate ORM 7 (JPA)
+- PostgreSQL en Neon
+- JasperReports 6.21.5
+- Jackson para leer JSON
+- APIs de OpenStreetMap: Nominatim (dirección a coordenadas) y OSRM (rutas)
+- Maven
+## Requisitos del proyecto y dónde se cumplen
+| Requisito | Dónde |
+| --- | --- |
+| Ocho entidades | 10 clases en model/ |
+| Relaciones JPA | @ManyToOne entre productos, categorías, clientes,
+proformas, facturas y despachos |
+| PostgreSQL | Neon, configurado en hibernate.cfg.xml |
+| Configuración de Hibernate | hibernate.cfg.xml y config/HibernateUtil.java
+|
+| CRUD reutilizable | dao/GenericDAO.java |
+| Dos consultas HQL | dao/ReportesDAO.java (productos más vendidos y ventas
+por vendedor) |
+| Validaciones y manejo de errores | Validaciones en cada formulario; los DAO
+deshacen la transacción y la pantalla muestra el error |
+| JasperReports | reportes/ y resources/.../reportes/*.jrxml |
+| Consumo de API | service/RutaService.java |
+## Arquitectura
+Patrón MVC con DAO. Paquetes en ni.edu.uam.anywherecrm:
+- model/: entidades JPA.
+- dao/: acceso a datos (GenericDAO y DAO específicos con HQL).
+- service/: lógica de negocio (FacturaService) y consumo de la API
+  (RutaService).
+- reportes/: generación de PDF con JasperReports.
+- controller/: controladores de las vistas FXML.
+- config/: conexión de Hibernate.
+- util/: sesión del usuario y datos de prueba.
+## Cómo ejecutar
+1. Instalar el JDK 21 y abrir la carpeta anywhere-crm en IntelliJ IDEA.
+2. Recargar Maven (Maven > Reload All Maven Projects).
+3. Configurar la contraseña de la base: en Run > Edit Configurations >
+   Launcher > Environment variables, agregar ANYWHERE_DB_PASSWORD con la
+   contraseña que entrega el equipo.
+4. Ejecutar la clase Launcher.
+5. La primera vez se crean usuarios y datos de prueba si las tablas están
+   vacías.
+## Usuarios de prueba
+| Usuario | Contraseña | Rol |
+| --- | --- | --- |
+| admin | admin123 | ADMIN |
+| vendedor | vendedor123 | VENDEDOR |
+| bodega | bodega123 | BODEGUERO |
+| despacho | despacho123 | DESPACHADOR |
+## Flujo de trabajo con Git
+- Rama main estable; cada integrante trabaja en su rama.
+- Commits con prefijo: feat, fix, build, docs.
+- Cada cambio entra a main por Pull Request, que revisa el líder.
+## Créditos
+Datos de mapas © OpenStreetMap contributors (Nominatim y OSRM).
