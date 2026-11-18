@@ -10,8 +10,16 @@ public class HibernateUtil {
 
     private static SessionFactory buildSessionFactory() {
         try {
-            // Lee la configuración del archivo hibernate.cfg.xml y construye la fábrica de sesiones
-            return new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+            // Lee la configuración del archivo hibernate.cfg.xml
+            Configuration configuracion = new Configuration().configure("hibernate.cfg.xml");
+
+            // Si existe la variable de entorno, la contraseña se toma de ahí y no del archivo.
+            // Así la contraseña real nunca se sube al repositorio.
+            String clave = System.getenv("ANYWHERE_DB_PASSWORD");
+            if (clave != null && !clave.isBlank()) {
+                configuracion.setProperty("hibernate.connection.password", clave);
+            }
+            return configuracion.buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Error al iniciar Hibernate: " + ex);
             throw new ExceptionInInitializerError(ex);
