@@ -16,8 +16,8 @@ import java.nio.charset.StandardCharsets;
 public class RutaService {
 
     // Punto de salida de los camiones. Cambiar por la ubicación real de la bodega.
-    public static final double BODEGA_LATITUD = 12.1364;
-    public static final double BODEGA_LONGITUD = -86.2514;
+    public static final double BODEGA_LATITUD = 12.143899;
+    public static final double BODEGA_LONGITUD = -86.254877;
 
     private static final String URL_NOMINATIM = "https://nominatim.openstreetmap.org/search";
     private static final String URL_OSRM = "https://router.project-osrm.org/route/v1/driving/";

@@ -28,6 +28,8 @@ bold;"/>
                   prefWidth="140"/>
         <TextField fx:id="txtRuta" promptText="Ruta (opcional)"
                    prefWidth="140"/>
+        <Button fx:id="btnCalcularRuta" text="Calcular ruta" onAction="#handleCalcularRuta"/>
+        <Button text="Ver mapa" onAction="#handleVerMapa"/>
         <DatePicker fx:id="dpFecha" prefWidth="130"/>
         <Button text="Crear despacho" onAction="#handleCrearDespacho"
                 style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight:
@@ -56,6 +58,7 @@ bold;"/>
                          prefWidth="100"/>
             <TableColumn fx:id="colDesDireccion" text="Dirección"
                          prefWidth="180"/>
+            <TableColumn fx:id="colDesRuta" text="Ruta" prefWidth="140"/>
         </columns>
     </TableView>
 </VBox>

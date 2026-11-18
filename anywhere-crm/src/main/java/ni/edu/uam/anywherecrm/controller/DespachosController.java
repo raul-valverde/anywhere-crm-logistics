@@ -1,5 +1,6 @@
 package ni.edu.uam.anywherecrm.controller;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,6 +10,10 @@ import ni.edu.uam.anywherecrm.dao.DespachoDAO;
 import ni.edu.uam.anywherecrm.model.Despacho;
 import ni.edu.uam.anywherecrm.model.Orden;
 import ni.edu.uam.anywherecrm.model.Usuario;
+import ni.edu.uam.anywherecrm.service.RutaService;
+
+import java.awt.Desktop;
+import java.net.URI;
 import java.time.LocalDate;
 // Pantalla para despachar facturas: en camión con ruta o retiro en bodega
 public class DespachosController {
@@ -34,7 +39,11 @@ public class DespachosController {
     @FXML private TableColumn<Despacho, LocalDate> colDesFecha;
     @FXML private TableColumn<Despacho, String> colDesRepartidor;
     @FXML private TableColumn<Despacho, String> colDesDireccion;
+    @FXML private TableColumn<Despacho, String> colDesRuta;
+    @FXML private Button btnCalcularRuta;
     private final DespachoDAO despachoDAO = new DespachoDAO();
+    private final RutaService rutaService = new RutaService();
+    private RutaService.Ruta ultimaRuta; // Última ruta calculada, para el botón Ver mapa
     @FXML
     public void initialize() {
         colFacId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -63,12 +72,14 @@ public class DespachosController {
                 SimpleStringProperty(
                 fila.getValue().getRepartidor() != null ?
                         fila.getValue().getRepartidor().getUsername() : "-"));
+        colDesRuta.setCellValueFactory(new PropertyValueFactory<>("rutaAsignada"));
         cbTipo.getItems().addAll("RUTA", "RETIRO");
         cbTipo.setValue("RUTA");
 // Un retiro en bodega no necesita dirección, repartidor ni ruta
         cbTipo.valueProperty().addListener((obs, anterior, nuevo) -> {
             boolean esRetiro = "RETIRO".equals(nuevo);
             txtDireccion.setDisable(esRetiro);
+            btnCalcularRuta.setDisable(esRetiro);
             cbRepartidor.setDisable(esRetiro);
             txtRuta.setDisable(esRetiro);
         });
@@ -157,12 +168,58 @@ public class DespachosController {
                     Alert.AlertType.WARNING);
         }
     }
+    // Consume la API de mapas en segundo plano para que la ventana no se congele
+    @FXML
+    private void handleCalcularRuta() {
+        String direccion = txtDireccion.getText().trim();
+        if (direccion.isEmpty()) {
+            mostrarAlerta("Falta la dirección", "Escribe la dirección de entrega antes de calcular la ruta", Alert.AlertType.WARNING);
+            return;
+        }
+        btnCalcularRuta.setDisable(true);
+        btnCalcularRuta.setText("Calculando...");
+
+        new Thread(() -> {
+            try {
+                RutaService.Ruta ruta = rutaService.calcularRuta(direccion);
+                // Los controles de JavaFX solo se tocan desde su propio hilo
+                Platform.runLater(() -> {
+                    ultimaRuta = ruta;
+                    txtRuta.setText(ruta.resumen());
+                    mostrarAlerta("Ruta calculada", "Destino: " + ruta.getDestino() + "\n" + ruta.resumen(),
+                            Alert.AlertType.INFORMATION);
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> mostrarAlerta("No se pudo calcular la ruta", e.getMessage(), Alert.AlertType.WARNING));
+            } finally {
+                Platform.runLater(() -> {
+                    btnCalcularRuta.setDisable(false);
+                    btnCalcularRuta.setText("Calcular ruta");
+                });
+            }
+        }).start();
+    }
+
+    // Abre en el navegador el mapa con la última ruta calculada
+    @FXML
+    private void handleVerMapa() {
+        if (ultimaRuta == null) {
+            mostrarAlerta("Sin ruta", "Primero calcula una ruta", Alert.AlertType.WARNING);
+            return;
+        }
+        try {
+            Desktop.getDesktop().browse(new URI(ultimaRuta.enlaceMapa()));
+        } catch (Exception e) {
+            mostrarAlerta("Error", "No se pudo abrir el navegador: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
     private void limpiarFormulario() {
         cbTipo.setValue("RUTA");
         txtDireccion.clear();
         txtRuta.clear();
         cbRepartidor.setValue(null);
         dpFecha.setValue(LocalDate.now());
+        ultimaRuta = null;
     }
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType
             tipo) {
