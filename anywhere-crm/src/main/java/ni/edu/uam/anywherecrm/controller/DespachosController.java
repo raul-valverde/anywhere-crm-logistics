@@ -3,6 +3,7 @@ package ni.edu.uam.anywherecrm.controller;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -13,6 +14,7 @@ import ni.edu.uam.anywherecrm.model.Orden;
 import ni.edu.uam.anywherecrm.model.RutaEntrega;
 import ni.edu.uam.anywherecrm.model.Usuario;
 import ni.edu.uam.anywherecrm.service.RutaService;
+import ni.edu.uam.anywherecrm.util.Navegacion;
 
 import java.awt.Desktop;
 import java.net.URI;
@@ -339,5 +341,10 @@ public class DespachosController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
     }
 }

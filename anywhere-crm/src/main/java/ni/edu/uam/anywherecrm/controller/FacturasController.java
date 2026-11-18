@@ -2,6 +2,7 @@ package ni.edu.uam.anywherecrm.controller;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -10,6 +11,7 @@ import ni.edu.uam.anywherecrm.dao.FacturaDAO;
 import ni.edu.uam.anywherecrm.model.DetalleOrden;
 import ni.edu.uam.anywherecrm.model.Orden;
 import ni.edu.uam.anywherecrm.reportes.FacturaReporte;
+import ni.edu.uam.anywherecrm.util.Navegacion;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -99,5 +101,10 @@ public class FacturasController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
     }
 }

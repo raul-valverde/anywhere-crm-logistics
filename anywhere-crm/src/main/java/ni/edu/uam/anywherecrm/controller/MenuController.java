@@ -52,8 +52,11 @@ public class MenuController {
                     FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/" + fxml));
             Stage ventana = new Stage();
             ventana.setTitle("Anywhere CRM - " + titulo);
-            ventana.setScene(new Scene(loader.load(), 900, 600));
-            ventana.show();
+            ventana.setScene(new Scene(loader.load(), 1000, 650));
+            ventana.setMinWidth(900);
+            ventana.setMinHeight(600);
+            ventana.setMaximized(true); // Ocupa toda la pantalla: así se ven todas las columnas
+            ventana.show();//setMaximized(true) se adapta a cualquier monitor: no hace falta calcular la resolución.
         } catch (IOException e) {
             mostrarAlerta("Error", "No se pudo abrir " + titulo + ": " +
                     e.getMessage(), Alert.AlertType.ERROR);

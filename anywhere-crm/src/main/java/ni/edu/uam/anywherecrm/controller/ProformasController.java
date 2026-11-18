@@ -1,5 +1,6 @@
 package ni.edu.uam.anywherecrm.controller;
 
+import javafx.event.ActionEvent;
 import ni.edu.uam.anywherecrm.model.Orden;
 import ni.edu.uam.anywherecrm.service.FacturaService;
 
@@ -16,6 +17,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ni.edu.uam.anywherecrm.dao.ProformaDAO;
 import ni.edu.uam.anywherecrm.model.DetalleProforma;
 import ni.edu.uam.anywherecrm.model.Proforma;
+import ni.edu.uam.anywherecrm.util.Navegacion;
+
 import java.time.LocalDate;
 import java.util.List;
 // Pantalla para consultar proformas, ver sus productos y anularlas
@@ -167,7 +170,11 @@ public class ProformasController {
             mostrarAlerta("No se pudo facturar", e.getMessage(), Alert.AlertType.WARNING);
         }
     }
-
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
+    }
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType
             tipo) {
         Alert alert = new Alert(tipo);

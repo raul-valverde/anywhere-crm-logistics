@@ -13,7 +13,7 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         DatosPrueba.cargarSiEstaVacio(); // Solo inserta datos donde las tablas están vacías
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login-view.fxml"));//Para la ventana que va a abrir de primero
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        Scene scene = new Scene(fxmlLoader.load());//El tamaño del login
         stage.setTitle("Anywhere-CRM");
         stage.setScene(scene);
         stage.show();

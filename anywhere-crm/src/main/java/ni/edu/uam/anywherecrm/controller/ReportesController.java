@@ -1,5 +1,6 @@
 package ni.edu.uam.anywherecrm.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
@@ -11,6 +12,8 @@ import java.io.File;
 import java.time.LocalDate;
 import javafx.scene.control.ListView;
 import ni.edu.uam.anywherecrm.dao.ReportesDAO;
+import ni.edu.uam.anywherecrm.util.Navegacion;
+
 import java.util.List;
 
 public class ReportesController {
@@ -35,7 +38,20 @@ public class ReportesController {
         dpDesde.setValue(LocalDate.now().withDayOfMonth(1));
         dpHasta.setValue(LocalDate.now());
     }
-
+    // Llena las dos listas con las consultas HQL de ReportesDAO
+    //cuando un error de compilación está en cualquier clase, IntelliJ no ejecuta nada. Por eso un error en Reportes hacía parecer que fallaba un botón de Proformas.
+    private void cargarReportes() {
+        // Consulta HQL 1: productos más vendidos
+        List<Object[]> topProd = reportesDAO.obtenerProductosMasVendidos();
+        for (Object[] fila : topProd) {
+            listTopProductos.getItems().add("Producto: " + fila[0] + " | Total Vendido: " + fila[1]);
+        }
+        // Consulta HQL 2: ventas totales por vendedor
+        List<Object[]> ventasVend = reportesDAO.obtenerVentasPorVendedor();
+        for (Object[] fila : ventasVend) {
+            listVentasVendedor.getItems().add("Vendedor: " + fila[0] + " | Monto Acumulado: $" + fila[1]);
+        }
+    }
     // Genera el PDF de ventas entre las dos fechas elegidas
     @FXML
     private void handlePdfVentas() {
@@ -80,5 +96,10 @@ public class ReportesController {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+    // Cierra este módulo y deja el menú al frente
+    @FXML
+    private void volverAlMenu(ActionEvent evento) {
+        Navegacion.volverAlMenu(evento);
     }
 }
