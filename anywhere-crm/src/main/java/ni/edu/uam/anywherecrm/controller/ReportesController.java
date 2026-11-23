@@ -3,12 +3,12 @@ package ni.edu.uam.anywherecrm.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import net.sf.jasperreports.engine.JasperPrint;
+import ni.edu.uam.anywherecrm.reportes.VistaPrevia;
 import javafx.scene.control.DatePicker;
-import javafx.stage.FileChooser;
 import ni.edu.uam.anywherecrm.dao.FacturaDAO;
 import ni.edu.uam.anywherecrm.model.Orden;
 import ni.edu.uam.anywherecrm.reportes.ReporteVentas;
-import java.io.File;
 import java.time.LocalDate;
 import javafx.scene.control.ListView;
 import ni.edu.uam.anywherecrm.dao.ReportesDAO;
@@ -70,21 +70,16 @@ public class ReportesController {
             mostrarAlerta("Sin ventas", "No hay facturas en ese rango de fechas", Alert.AlertType.INFORMATION);
             return;
         }
-        FileChooser selector = new FileChooser();
-        selector.setTitle("Guardar reporte de ventas");
-        selector.setInitialFileName("Ventas-" + desde + "-a-" + hasta +
-                ".pdf");
-        selector.getExtensionFilters().add(new
-                FileChooser.ExtensionFilter("PDF", "*.pdf"));
-        File destino =
-                selector.showSaveDialog(dpDesde.getScene().getWindow());
-        if (destino == null) return; // El usuario canceló
         try {
-            reporteVentas.generarPdf(desde, hasta, facturas, destino);
-            mostrarAlerta("PDF generado", "Reporte guardado en:\n" +
-                    destino.getAbsolutePath(), Alert.AlertType.INFORMATION);
+// Se arma el reporte una vez y la vista previa decide el formato (PDF o Excel)
+            JasperPrint impresion = reporteVentas.crear(desde, hasta,
+                    facturas);
+            VistaPrevia.mostrar(impresion, "Ventas del " + desde + " al " +
+                            hasta,
+                    "Ventas-" + desde + "-a-" + hasta,
+                    dpDesde.getScene().getWindow());
         } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo generar el PDF: " +
+            mostrarAlerta("Error", "No se pudo generar el reporte: " +
                     e.getMessage(), Alert.AlertType.ERROR);
         }
     }
