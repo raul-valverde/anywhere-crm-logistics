@@ -17,6 +17,10 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
+
+import net.sf.jasperreports.engine.JasperPrint;
+import ni.edu.uam.anywherecrm.reportes.VistaPrevia;
+
 // Pantalla para consultar facturas y generar su PDF con JasperReports
 public class FacturasController {
 
@@ -78,20 +82,15 @@ public class FacturasController {
             mostrarAlerta("Sin selección", "Selecciona una factura", Alert.AlertType.WARNING);
             return;
         }
-
-        FileChooser selector = new FileChooser();
-        selector.setTitle("Guardar factura en PDF");
-        selector.setInitialFileName("Factura-" + factura.getId() + ".pdf");
-        selector.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
-        File destino = selector.showSaveDialog(tablaFacturas.getScene().getWindow());
-        if (destino == null) return; // El usuario canceló
-
         try {
+            // Se arma la factura con Jasper y se abre la vista previa; desde ahí se guarda en PDF o Excel
             List<DetalleOrden> detalles = facturaDAO.obtenerDetalles(factura.getId());
-            facturaReporte.generarPdf(factura, detalles, destino);
-            mostrarAlerta("PDF generado", "Factura guardada en:\n" + destino.getAbsolutePath(), Alert.AlertType.INFORMATION);
+            JasperPrint impresion = facturaReporte.crear(factura, detalles);
+            VistaPrevia.mostrar(impresion, "Factura #" + factura.getId(),
+                    "Factura-" + factura.getId(),
+                    tablaFacturas.getScene().getWindow());
         } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo generar el PDF: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "No se pudo generar la factura: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 

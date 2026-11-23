@@ -21,6 +21,9 @@ import ni.edu.uam.anywherecrm.util.Navegacion;
 
 import java.io.File;
 
+import net.sf.jasperreports.engine.JasperPrint;
+import ni.edu.uam.anywherecrm.reportes.VistaPrevia;
+
 public class InventarioController {
 
     // Componentes mapeados desde el FXML
@@ -200,20 +203,14 @@ public class InventarioController {
             mostrarAlerta("Sin productos", "No hay productos para el reporte", Alert.AlertType.WARNING);
             return;
         }
-
-        FileChooser selector = new FileChooser();
-        selector.setTitle("Guardar reporte de inventario");
-        selector.setInitialFileName("Inventario-" + java.time.LocalDate.now() + ".pdf");
-        selector.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
-
-        File destino = selector.showSaveDialog(tablaProductos.getScene().getWindow());
-        if (destino == null) return; // El usuario canceló
-
         try {
-            reporteInventario.generarPdf(listaProductos, destino);
-            mostrarAlerta("PDF generado", "Reporte guardado en:\n" + destino.getAbsolutePath(), Alert.AlertType.INFORMATION);
+            // Reporte de bodega con lo que hay ahora en la tabla; la vista previa permite guardarlo en PDF o Excel
+            JasperPrint impresion = reporteInventario.crear(listaProductos);
+            VistaPrevia.mostrar(impresion, "Inventario al " + java.time.LocalDate.now(),
+                    "Inventario-" + java.time.LocalDate.now(),
+                    tablaProductos.getScene().getWindow());
         } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo generar el PDF: " + e.getMessage(), Alert.AlertType.ERROR);
+            mostrarAlerta("Error", "No se pudo generar el reporte: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
     // Cierra este módulo y deja el menú al frente
