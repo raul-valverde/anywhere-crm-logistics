@@ -19,7 +19,7 @@ public class FacturaReporte {
 
     public JasperPrint crear(Orden orden, List<DetalleOrden> detalles) throws JRException, IOException {
         // 1. Cada producto de la factura es una fila del reporte (un Map con los $F{} del jrxml)
-        List> filas = new ArrayList<>();
+        List<Map<String, ?>> filas = new ArrayList<>();
         for (DetalleOrden d : detalles) {
             Map<String, Object> fila = new HashMap<>();
             fila.put("producto", d.getProducto().getNombre());
