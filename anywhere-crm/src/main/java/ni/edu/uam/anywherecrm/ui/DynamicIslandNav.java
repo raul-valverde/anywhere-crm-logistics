@@ -59,7 +59,6 @@ public class DynamicIslandNav extends StackPane {
 
     private static final double ALTO_CONTRAIDO = 42;
     private static final double ALTO_EXPANDIDO = 52;
-    private static final double ANCHO_MIN_EXPANDIDO = 920;
     private static final double ANCHO_MAX_EXPANDIDO = 1050;
     private static final double MARGEN_LATERAL = 24;
     private static final Duration DURACION = Duration.millis(200);
@@ -157,8 +156,7 @@ public class DynamicIslandNav extends StackPane {
 
         usuario.getStyleClass().add("island-user");
         usuario.setMouseTransparent(true); // Solo informativo
-        Usuario actual = Sesion.getUsuarioActual();
-        usuario.setText(actual == null ? "" : actual.getUsername() + " (" + actual.getRol() + ")");
+        actualizarUsuario();
         Region divisor = new Region();
         divisor.getStyleClass().add("island-divider");
         Button salir = new Button("Cerrar sesión");
@@ -252,8 +250,11 @@ public class DynamicIslandNav extends StackPane {
         // La isla ya no ocupa toda la pantalla: el espacio disponible se mide con el ancho de la escena
         double anchoPantalla = getScene() != null ? getScene().getWidth() : 0;
         double disponible = anchoPantalla > 0 ? anchoPantalla - 2 * MARGEN_LATERAL : ANCHO_MAX_EXPANDIDO;
+        actualizarUsuario();
+        // Ancho natural según los botones VISIBLES (los módulos no permitidos no ocupan espacio)
+        vistaExpandida.setPrefWidth(Region.USE_COMPUTED_SIZE);
         double natural = vistaExpandida.prefWidth(-1);
-        double objetivo = Math.min(Math.max(natural, ANCHO_MIN_EXPANDIDO), Math.min(ANCHO_MAX_EXPANDIDO, disponible));
+        double objetivo = Math.min(natural, Math.min(ANCHO_MAX_EXPANDIDO, disponible));
         vistaExpandida.setPrefWidth(objetivo);
         vistaExpandida.setMouseTransparent(false);
         vistaContraida.setMouseTransparent(true);
@@ -298,6 +299,24 @@ public class DynamicIslandNav extends StackPane {
             zonaModulos.getChildren().add(boton);
         }
         decorar(modulo, boton);
+        aplicarPermiso(modulo, boton);
+        // El menú deshabilita sus botones según el rol en MenuController.initialize(): si eso ocurre, también se ocultan
+        boton.disableProperty().addListener((obs, antes, ahora) -> aplicarPermiso(modulo, boton));
+    }
+
+    // Filtrado por rol: un módulo no permitido no se muestra ni ocupa lugar en la cápsula.
+    // Las reglas son las de Modulo (las mismas que aplica MenuController con Sesion.tieneRol);
+    // Inicio no tiene restricción de rol y "Cerrar sesión" va aparte, así que siempre están.
+    private void aplicarPermiso(Modulo modulo, Button boton) {
+        boolean visible = modulo.permitido() && !boton.isDisable();
+        boton.setVisible(visible);
+        boton.setManaged(visible);
+    }
+
+    // Nombre y rol del usuario que inició sesión, p. ej. "vendedor (VENDEDOR)"
+    private void actualizarUsuario() {
+        Usuario actual = Sesion.getUsuarioActual();
+        usuario.setText(actual == null ? "" : actual.getUsername() + " (" + actual.getRol() + ")");
     }
 
     // Botón del menú: se identifica por userData="CLIENTES" (o por su texto)
