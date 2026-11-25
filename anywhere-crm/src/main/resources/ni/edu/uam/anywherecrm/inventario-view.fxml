@@ -33,7 +33,7 @@
             </VBox>
 
             <!-- Productos: crece junto con la tabla de movimientos -->
-            <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS" prefHeight="280" minHeight="220">
+            <TableView fx:id="tablaProductos" VBox.vgrow="ALWAYS" prefHeight="250" minHeight="180">
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
@@ -60,7 +60,7 @@
                 </HBox>
             </VBox>
 
-            <TableView fx:id="tablaMovimientos" VBox.vgrow="ALWAYS" prefHeight="250" minHeight="210">
+            <TableView fx:id="tablaMovimientos" VBox.vgrow="ALWAYS" prefHeight="220" minHeight="170">
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
@@ -72,6 +72,23 @@
                     <TableColumn fx:id="colMovMotivo" text="Motivo" prefWidth="180"/>
                 </columns>
             </TableView>
+
+            <!-- Reporte Kardex / Movimientos de bodega (JasperReports) -->
+            <VBox styleClass="card" spacing="12">
+                <VBox spacing="2">
+                    <Label text="Reporte de movimientos de bodega / Kardex (JasperReports)" styleClass="section-title"/>
+                    <Label text="Elige el rango de fechas y el tipo de movimiento para generar la vista previa (PDF o Excel)" styleClass="section-caption"/>
+                </VBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Desde:" styleClass="field-label"/>
+                    <DatePicker fx:id="dpMovDesde" prefWidth="160"/>
+                    <Label text="Hasta:" styleClass="field-label"/>
+                    <DatePicker fx:id="dpMovHasta" prefWidth="160"/>
+                    <Label text="Tipo:" styleClass="field-label"/>
+                    <ComboBox fx:id="cbTipoMov" prefWidth="150"/>
+                    <Button text="Generar reporte" onAction="#handleReporteMovimientos" styleClass="btn-primary"/>
+                </HBox>
+            </VBox>
         </VBox>
     </ScrollPane>
 

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="movimientos" pageWidth="595" pageHeight="842" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <!-- Estilo condicional: ENTRADA en verde y SALIDA en rojo -->
+    <style name="estiloTipo">
+        <conditionalStyle>
+            <conditionExpression><![CDATA["ENTRADA".equals($F{tipo})]]></conditionExpression>
+            <style forecolor="#2E7D32" isBold="true"/>
+        </conditionalStyle>
+        <conditionalStyle>
+            <conditionExpression><![CDATA["SALIDA".equals($F{tipo})]]></conditionExpression>
+            <style forecolor="#D32F2F" isBold="true"/>
+        </conditionalStyle>
+    </style>
+
+    <!-- Parámetros de cabecera -->
+    <parameter name="DESDE" class="java.lang.String"/>
+    <parameter name="HASTA" class="java.lang.String"/>
+    <parameter name="TIPO_FILTRO" class="java.lang.String"/>
+
+    <!-- Una fila por cada movimiento de inventario -->
+    <field name="fecha" class="java.lang.String"/>
+    <field name="producto" class="java.lang.String"/>
+    <field name="motivo" class="java.lang.String"/>
+    <field name="tipo" class="java.lang.String"/>
+    <field name="cantidad" class="java.lang.Integer"/>
+
+    <!-- Totales calculados automáticamente por JasperReports -->
+    <variable name="TOTAL_ENTRADAS" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA["ENTRADA".equals($F{tipo}) ? $F{cantidad} : 0]]></variableExpression>
+    </variable>
+    <variable name="TOTAL_SALIDAS" class="java.lang.Integer" calculation="Sum">
+        <variableExpression><![CDATA["SALIDA".equals($F{tipo}) ? $F{cantidad} : 0]]></variableExpression>
+    </variable>
+
+    <title>
+        <band height="82">
+            <staticText>
+                <reportElement x="0" y="0" width="555" height="30"/>
+                <textElement>
+                    <font size="20" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Anywhere CRM Logistics]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="0" y="35" width="555" height="22"/>
+                <textElement>
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Kardex / Movimientos de bodega del " + $P{DESDE} + " al " + $P{HASTA}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="59" width="555" height="18"/>
+                <textFieldExpression><![CDATA["Tipo de movimiento: " + $P{TIPO_FILTRO}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+
+    <columnHeader>
+        <band height="22">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="95" height="22" backcolor="#E3F2FD"/>
+                <textElement verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fecha y hora]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="95" y="0" width="165" height="22" backcolor="#E3F2FD"/>
+                <textElement verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Producto]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="260" y="0" width="155" height="22" backcolor="#E3F2FD"/>
+                <textElement verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Motivo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="415" y="0" width="70" height="22" backcolor="#E3F2FD"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Tipo]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="485" y="0" width="70" height="22" backcolor="#E3F2FD"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Cantidad]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="95" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="95" y="0" width="165" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="260" y="0" width="155" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement style="estiloTipo" x="415" y="0" width="70" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0">
+                <reportElement x="485" y="0" width="70" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <pageFooter>
+        <band height="20">
+            <textField>
+                <reportElement x="355" y="0" width="200" height="20"/>
+                <textElement textAlignment="Right"/>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+
+    <summary>
+        <band height="45">
+            <textField>
+                <reportElement x="0" y="12" width="200" height="22"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Movimientos: " + $V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="12" width="355" height="22"/>
+                <textElement textAlignment="Right">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Unidades entradas: " + ($V{TOTAL_ENTRADAS} == null ? 0 : $V{TOTAL_ENTRADAS}) + "  |  Unidades salidas: " + ($V{TOTAL_SALIDAS} == null ? 0 : $V{TOTAL_SALIDAS})]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

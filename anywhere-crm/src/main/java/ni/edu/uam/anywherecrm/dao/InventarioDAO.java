@@ -6,6 +6,8 @@ import ni.edu.uam.anywherecrm.model.Producto;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 // Maneja las entradas y salidas de bodega
@@ -70,6 +72,27 @@ public class InventarioDAO {
                             MovimientoInventario.class)
                     .setParameter("id", productoId)
                     .list();
+        }
+    }
+
+    // Movimientos entre dos fechas (incluidas) y opcionalmente por tipo (TODOS, ENTRADA o SALIDA), para el Kardex
+    public List<MovimientoInventario> obtenerMovimientosEntre(LocalDate desde, LocalDate hasta, String tipo) {
+        LocalDateTime inicio = desde.atStartOfDay();
+        LocalDateTime fin = hasta.plusDays(1).atStartOfDay();
+        boolean filtrarTipo = tipo != null && !"TODOS".equalsIgnoreCase(tipo);
+
+        String hql = "FROM MovimientoInventario m WHERE m.fecha >= :inicio AND m.fecha < :fin"
+                + (filtrarTipo ? " AND m.tipo = :tipo" : "")
+                + " ORDER BY m.fecha ASC, m.id ASC";
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            var consulta = session.createQuery(hql, MovimientoInventario.class)
+                    .setParameter("inicio", inicio)
+                    .setParameter("fin", fin);
+            if (filtrarTipo) {
+                consulta.setParameter("tipo", tipo);
+            }
+            return consulta.list();
         }
     }
 }
