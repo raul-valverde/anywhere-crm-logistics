@@ -2,6 +2,7 @@ package ni.edu.uam.anywherecrm.reportes;
 
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperPrint;
+import ni.edu.uam.anywherecrm.dao.InventarioDAO;
 import ni.edu.uam.anywherecrm.model.MovimientoInventario;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// Arma el reporte Kardex / movimientos de bodega entre dos fechas con la plantilla movimientos.jrxml.
+// Arma el reporte de movimientos de bodega entre dos fechas con la plantilla movimientos.jrxml.
 // Devuelve el JasperPrint: la vista previa lo muestra y permite exportarlo a PDF o Excel.
 public class ReporteMovimientos {
 
@@ -20,13 +21,15 @@ public class ReporteMovimientos {
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public JasperPrint crear(LocalDate desde, LocalDate hasta, String tipoFiltro,
-                             List<MovimientoInventario> movimientos) throws JRException, IOException {
+                             List<MovimientoInventario> movimientos,
+                             Map<Long, String> vendedoresFactura) throws JRException, IOException {
         // 1. Una fila por movimiento registrado en bodega
         List<Map<String, ?>> filas = new ArrayList<>();
         for (MovimientoInventario mov : movimientos) {
             Map<String, Object> fila = new HashMap<>();
             fila.put("fecha", mov.getFecha() != null ? mov.getFecha().format(FORMATO_FECHA) : "");
             fila.put("producto", mov.getProducto() != null ? mov.getProducto().getNombre() : "");
+            fila.put("usuario", InventarioDAO.resolverUsuario(mov, vendedoresFactura));
             fila.put("motivo", mov.getMotivo() != null ? mov.getMotivo() : "");
             fila.put("tipo", mov.getTipo() != null ? mov.getTipo() : "");
             fila.put("cantidad", mov.getCantidad() != null ? mov.getCantidad() : 0);

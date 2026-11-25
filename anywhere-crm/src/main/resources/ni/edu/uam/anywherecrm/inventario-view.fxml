@@ -65,18 +65,19 @@
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
                 <columns>
-                    <TableColumn fx:id="colMovFecha" text="Fecha" prefWidth="160"/>
+                    <TableColumn fx:id="colMovFecha" text="Fecha" prefWidth="150"/>
                     <TableColumn fx:id="colMovProducto" text="Producto" prefWidth="180"/>
+                    <TableColumn fx:id="colMovUsuario" text="Usuario" prefWidth="110"/>
                     <TableColumn fx:id="colMovTipo" text="Tipo" prefWidth="90"/>
                     <TableColumn fx:id="colMovCantidad" text="Cantidad" prefWidth="80"/>
-                    <TableColumn fx:id="colMovMotivo" text="Motivo" prefWidth="180"/>
+                    <TableColumn fx:id="colMovMotivo" text="Motivo" prefWidth="170"/>
                 </columns>
             </TableView>
 
-            <!-- Reporte Kardex / Movimientos de bodega (JasperReports) -->
+            <!-- Reporte de movimientos de bodega (JasperReports) -->
             <VBox styleClass="card" spacing="12">
                 <VBox spacing="2">
-                    <Label text="Reporte de movimientos de bodega / Kardex (JasperReports)" styleClass="section-title"/>
+                    <Label text="Reporte de movimientos de bodega (JasperReports)" styleClass="section-title"/>
                     <Label text="Elige el rango de fechas y el tipo de movimiento para generar la vista previa (PDF o Excel)" styleClass="section-caption"/>
                 </VBox>
                 <HBox spacing="10" alignment="CENTER_LEFT">

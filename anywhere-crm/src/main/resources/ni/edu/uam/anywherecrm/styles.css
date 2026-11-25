@@ -1071,17 +1071,19 @@
 }
 
 /* ---------------------------------------------------------------------
-   12. Vista previa de reportes (reportes/VistaPrevia.java)
+   12. Vista previa de reportes a pantalla completa (reportes/VistaPrevia.java)
    --------------------------------------------------------------------- */
 .vista-previa {
-    -fx-background-color: #F4F7FA;
+    -fx-background-color: #E2E8F0;
 }
 
+.barra-vista-previa,
 .tool-bar.barra-vista-previa {
     -fx-background-color: #0B1F3A;
-    -fx-padding: 10 16 10 16;
-    -fx-spacing: 8;
+    -fx-padding: 12 24 12 24;
+    -fx-spacing: 10;
     -fx-border-width: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(11, 31, 58, 0.22), 12, 0, 0, 3);
 }
 
 .barra-vista-previa .label {
@@ -1089,8 +1091,46 @@
     -fx-font-weight: bold;
 }
 
-.barra-vista-previa .separator .line {
-    -fx-border-color: #334155;
+.barra-vista-previa .label.titulo-vista-previa {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.barra-vista-previa .separator:vertical .line {
+    -fx-border-color: rgba(255, 255, 255, 0.16);
+    -fx-border-insets: 4 0 4 0;
+}
+
+/* Botones de navegación, zoom y cerrar sobre la barra navy */
+.barra-vista-previa .button.btn-barra {
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-border-color: rgba(255, 255, 255, 0.18);
+    -fx-text-fill: #F8FAFC;
+    -fx-font-weight: bold;
+    -fx-padding: 7 14 7 14;
+    -fx-effect: null;
+}
+
+.barra-vista-previa .button.btn-barra:hover {
+    -fx-background-color: rgba(0, 168, 232, 0.22);
+    -fx-border-color: #00A8E8;
+    -fx-text-fill: #FFFFFF;
+}
+
+/* Botón principal para regresar al módulo anterior */
+.barra-vista-previa .button.btn-volver-previa {
+    -fx-background-color: rgba(0, 168, 232, 0.16);
+    -fx-border-color: rgba(0, 168, 232, 0.55);
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-padding: 7 16 7 16;
+    -fx-effect: null;
+}
+
+.barra-vista-previa .button.btn-volver-previa:hover {
+    -fx-background-color: #00A8E8;
+    -fx-border-color: #00A8E8;
 }
 
 .fondo-hojas {
@@ -1098,7 +1138,7 @@
 }
 
 .hoja {
-    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.25), 18, 0, 0, 6);
+    -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.28), 22, 0, 0, 8);
 }
 
 /* ---------------------------------------------------------------------

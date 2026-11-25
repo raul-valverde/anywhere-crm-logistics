@@ -13,7 +13,9 @@ import ni.edu.uam.anywherecrm.dao.InventarioDAO;
 import ni.edu.uam.anywherecrm.model.MovimientoInventario;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafx.util.StringConverter;
 import ni.edu.uam.anywherecrm.model.Categoria;
@@ -41,16 +43,18 @@ public class InventarioController {
     @FXML private TableView<MovimientoInventario> tablaMovimientos;
     @FXML private TableColumn<MovimientoInventario, LocalDateTime> colMovFecha;
     @FXML private TableColumn<MovimientoInventario, String> colMovProducto;
+    @FXML private TableColumn<MovimientoInventario, String> colMovUsuario;
     @FXML private TableColumn<MovimientoInventario, String> colMovTipo;
     @FXML private TableColumn<MovimientoInventario, Integer> colMovCantidad;
     @FXML private TableColumn<MovimientoInventario, String> colMovMotivo;
 
-    // Filtros del reporte Kardex / movimientos por fechas
+    // Filtros del reporte de movimientos por fechas
     @FXML private DatePicker dpMovDesde;
     @FXML private DatePicker dpMovHasta;
     @FXML private ComboBox<String> cbTipoMov;
 
     private final InventarioDAO inventarioDAO = new InventarioDAO();
+    private Map<Long, String> vendedoresFactura = new HashMap<>();
 
     // Categoría del producto y reportes en PDF / Excel
     @FXML private ComboBox<Categoria> cbCategoria;
@@ -79,11 +83,11 @@ public class InventarioController {
         cargarDatos();
         configurarTablaMovimientos();
         cargarMovimientos();
-        configurarFiltrosKardex();
+        configurarFiltrosMovimientos();
     }
 
     // Por defecto filtra desde el primer día del mes actual hasta hoy y todos los tipos
-    private void configurarFiltrosKardex() {
+    private void configurarFiltrosMovimientos() {
         dpMovDesde.setValue(LocalDate.now().withDayOfMonth(1));
         dpMovHasta.setValue(LocalDate.now());
         cbTipoMov.getItems().addAll("TODOS", "ENTRADA", "SALIDA");
@@ -144,9 +148,12 @@ public class InventarioController {
         colMovMotivo.setCellValueFactory(new PropertyValueFactory<>("motivo"));
         colMovProducto.setCellValueFactory(fila -> new SimpleStringProperty(
                 fila.getValue().getProducto().getNombre()));
+        colMovUsuario.setCellValueFactory(fila -> new SimpleStringProperty(
+                InventarioDAO.resolverUsuario(fila.getValue(), vendedoresFactura)));
     }
 
     private void cargarMovimientos() {
+        vendedoresFactura = inventarioDAO.obtenerVendedoresPorFactura();
         tablaMovimientos.setItems(FXCollections.observableArrayList(inventarioDAO.obtenerMovimientos()));
     }
 
@@ -229,7 +236,7 @@ public class InventarioController {
         }
     }
 
-    // Genera el reporte Kardex / movimientos de bodega filtrados por fechas y tipo en la vista previa (PDF o Excel)
+    // Genera el reporte de movimientos de bodega filtrados por fechas y tipo en la vista previa (PDF o Excel)
     @FXML
     private void handleReporteMovimientos() {
         LocalDate desde = dpMovDesde.getValue();
@@ -251,10 +258,11 @@ public class InventarioController {
         }
         try {
             // Se arma una sola vez y la vista previa permite exportarlo a PDF o Excel
-            JasperPrint impresion = reporteMovimientos.crear(desde, hasta, tipo, movimientos);
+            Map<Long, String> mapaVendedores = inventarioDAO.obtenerVendedoresPorFactura();
+            JasperPrint impresion = reporteMovimientos.crear(desde, hasta, tipo, movimientos, mapaVendedores);
             VistaPrevia.mostrar(impresion,
                     "Movimientos del " + desde + " al " + hasta,
-                    "Kardex-" + desde + "-a-" + hasta,
+                    "Movimientos-" + desde + "-a-" + hasta,
                     tablaMovimientos.getScene().getWindow());
         } catch (Exception e) {
             mostrarAlerta("Error", "No se pudo generar el reporte: " + e.getMessage(), Alert.AlertType.ERROR);

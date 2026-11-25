@@ -25,6 +25,7 @@
     <!-- Una fila por cada movimiento de inventario -->
     <field name="fecha" class="java.lang.String"/>
     <field name="producto" class="java.lang.String"/>
+    <field name="usuario" class="java.lang.String"/>
     <field name="motivo" class="java.lang.String"/>
     <field name="tipo" class="java.lang.String"/>
     <field name="cantidad" class="java.lang.Integer"/>
@@ -51,7 +52,7 @@
                 <textElement>
                     <font size="14" isBold="true"/>
                 </textElement>
-                <textFieldExpression><![CDATA["Kardex / Movimientos de bodega del " + $P{DESDE} + " al " + $P{HASTA}]]></textFieldExpression>
+                <textFieldExpression><![CDATA["Reporte de movimientos de bodega del " + $P{DESDE} + " al " + $P{HASTA}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="0" y="59" width="555" height="18"/>
@@ -63,35 +64,42 @@
     <columnHeader>
         <band height="22">
             <staticText>
-                <reportElement mode="Opaque" x="0" y="0" width="95" height="22" backcolor="#E3F2FD"/>
+                <reportElement mode="Opaque" x="0" y="0" width="90" height="22" backcolor="#E3F2FD"/>
                 <textElement verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
                 <text><![CDATA[Fecha y hora]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="95" y="0" width="165" height="22" backcolor="#E3F2FD"/>
+                <reportElement mode="Opaque" x="90" y="0" width="142" height="22" backcolor="#E3F2FD"/>
                 <textElement verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
                 <text><![CDATA[Producto]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="260" y="0" width="155" height="22" backcolor="#E3F2FD"/>
+                <reportElement mode="Opaque" x="232" y="0" width="75" height="22" backcolor="#E3F2FD"/>
+                <textElement verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Usuario]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="307" y="0" width="130" height="22" backcolor="#E3F2FD"/>
                 <textElement verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
                 <text><![CDATA[Motivo]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="415" y="0" width="70" height="22" backcolor="#E3F2FD"/>
+                <reportElement mode="Opaque" x="437" y="0" width="60" height="22" backcolor="#E3F2FD"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
                 <text><![CDATA[Tipo]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="485" y="0" width="70" height="22" backcolor="#E3F2FD"/>
+                <reportElement mode="Opaque" x="497" y="0" width="58" height="22" backcolor="#E3F2FD"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle">
                     <font isBold="true"/>
                 </textElement>
@@ -103,27 +111,32 @@
     <detail>
         <band height="20">
             <textField>
-                <reportElement x="0" y="0" width="95" height="20"/>
+                <reportElement x="0" y="0" width="90" height="20"/>
                 <textElement verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="95" y="0" width="165" height="20"/>
+                <reportElement x="90" y="0" width="142" height="20"/>
                 <textElement verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="260" y="0" width="155" height="20"/>
+                <reportElement x="232" y="0" width="75" height="20"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{usuario}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="307" y="0" width="130" height="20"/>
                 <textElement verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement style="estiloTipo" x="415" y="0" width="70" height="20"/>
+                <reportElement style="estiloTipo" x="437" y="0" width="60" height="20"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
             </textField>
             <textField pattern="#,##0">
-                <reportElement x="485" y="0" width="70" height="20"/>
+                <reportElement x="497" y="0" width="58" height="20"/>
                 <textElement textAlignment="Right" verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
             </textField>
