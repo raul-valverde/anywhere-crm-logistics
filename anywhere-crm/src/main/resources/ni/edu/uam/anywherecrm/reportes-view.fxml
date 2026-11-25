@@ -4,9 +4,9 @@
 <?import ni.edu.uam.anywherecrm.ui.DynamicIslandNav?>
 
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="ni.edu.uam.anywherecrm.controller.ReportesController"
-            stylesheets="@styles.css" styleClass="app-shell"
-            prefWidth="1280" prefHeight="800">
+           fx:controller="ni.edu.uam.anywherecrm.controller.ReportesController"
+           stylesheets="@styles.css" styleClass="app-shell"
+           prefWidth="1280" prefHeight="800">
 
     <!-- Capa base: contenido del módulo (se anima con FadeTransition al navegar) -->
     <ScrollPane fitToWidth="true" fitToHeight="true" focusTraversable="false" styleClass="content-scroll, content-layer">
@@ -37,7 +37,7 @@
                 </VBox>
             </HBox>
 
-            <!-- Reporte PDF -->
+            <!-- Reporte PDF Ventas -->
             <VBox styleClass="card" spacing="12">
                 <VBox spacing="2">
                     <Label text="Reporte de ventas en PDF (JasperReports)" styleClass="section-title"/>
@@ -51,6 +51,24 @@
                     <Button text="PDF de ventas" onAction="#handlePdfVentas" styleClass="btn-primary"/>
                 </HBox>
             </VBox>
+
+            <!-- Reporte PDF Despachos y Entregas Logísticas -->
+            <VBox styleClass="card" spacing="12">
+                <VBox spacing="2">
+                    <Label text="Reporte de despachos y entregas logísticas (JasperReports)" styleClass="section-title"/>
+                    <Label text="Elige el rango de fechas y el estado para generar la vista previa (PDF o Excel)" styleClass="section-caption"/>
+                </VBox>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="Desde:" styleClass="field-label"/>
+                    <DatePicker fx:id="dpDespachoDesde" prefWidth="160"/>
+                    <Label text="Hasta:" styleClass="field-label"/>
+                    <DatePicker fx:id="dpDespachoHasta" prefWidth="160"/>
+                    <Label text="Estado:" styleClass="field-label"/>
+                    <ComboBox fx:id="cbEstadoDespacho" prefWidth="150"/>
+                    <Button text="Generar reporte" onAction="#handlePdfDespachos" styleClass="btn-primary"/>
+                </HBox>
+            </VBox>
+
         </VBox>
     </ScrollPane>
 

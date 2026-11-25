@@ -100,5 +100,27 @@ public class DespachoDAO {
         }
         return null; // Ya está ENTREGADO
     }
+    // Consulta despachos filtrados por rango de fechas y estado (TODOS, PENDIENTE, EN_CAMINO, ENTREGADO)
+    public List<Despacho> obtenerDespachosPorFiltro(java.time.LocalDate desde, java.time.LocalDate hasta, String estado) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            boolean filtrarEstado = estado != null && !"TODOS".equalsIgnoreCase(estado);
+
+            String hql = "SELECT d FROM Despacho d "
+                    + "LEFT JOIN FETCH d.orden o "
+                    + "LEFT JOIN FETCH o.cliente "
+                    + "LEFT JOIN FETCH d.repartidor "
+                    + "WHERE d.fechaDespacho BETWEEN :desde AND :hasta "
+                    + (filtrarEstado ? "AND d.estado = :estado " : "")
+                    + "ORDER BY d.fechaDespacho DESC, d.id DESC";
+
+            var query = session.createQuery(hql, Despacho.class);
+            query.setParameter("desde", desde);
+            query.setParameter("hasta", hasta);
+            if (filtrarEstado) {
+                query.setParameter("estado", estado);
+            }
+            return query.list();
+        }
+    }
 }
 
