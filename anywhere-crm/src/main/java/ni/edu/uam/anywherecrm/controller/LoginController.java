@@ -1,12 +1,11 @@
 package ni.edu.uam.anywherecrm.controller;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import ni.edu.uam.anywherecrm.config.HibernateUtil;
 import ni.edu.uam.anywherecrm.model.Usuario;
+import ni.edu.uam.anywherecrm.ui.Ventanas;
 import org.hibernate.Session;
 import ni.edu.uam.anywherecrm.util.Sesion;
 
@@ -55,9 +54,9 @@ public class LoginController {
 
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/" + vista));
             Stage stage = (Stage) txtUsername.getScene().getWindow();
-            stage.setScene(new Scene(loader.load(), 800, 600));
+            // Se reemplaza solo el contenido de la escena: la ventana sigue maximizada y sin franjas
+            Ventanas.cambiarContenido(stage, vista);
         } catch (IOException e) {
             e.printStackTrace();
         }

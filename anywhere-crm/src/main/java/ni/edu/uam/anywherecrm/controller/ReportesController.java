@@ -12,6 +12,7 @@ import ni.edu.uam.anywherecrm.reportes.ReporteVentas;
 import java.time.LocalDate;
 import javafx.scene.control.ListView;
 import ni.edu.uam.anywherecrm.dao.ReportesDAO;
+import ni.edu.uam.anywherecrm.ui.CeldaResultado;
 import ni.edu.uam.anywherecrm.util.Navegacion;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class ReportesController {
 
     @FXML
     public void initialize() {
+        // Solo presentación: cada resultado se muestra como un ítem limpio con el valor en negrita
+        listTopProductos.setCellFactory(lista -> new CeldaResultado());
+        listVentasVendedor.setCellFactory(lista -> new CeldaResultado());
         cargarReportes();
         // Por defecto: desde el primer día del mes hasta hoy
         dpDesde.setValue(LocalDate.now().withDayOfMonth(1));
