@@ -7,6 +7,8 @@ import ni.edu.uam.anywherecrm.model.MovimientoInventario;
 import ni.edu.uam.anywherecrm.model.Orden;
 import ni.edu.uam.anywherecrm.model.Producto;
 import ni.edu.uam.anywherecrm.model.Proforma;
+import ni.edu.uam.anywherecrm.model.Usuario;
+import ni.edu.uam.anywherecrm.util.Sesion;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -70,6 +72,11 @@ public class FacturaService {
                 orden.setTotal(0.0);
                 session.persist(orden); // Aquí ya recibe su número (id)
 
+                Usuario actual = Sesion.getUsuarioActual();
+                Usuario responsable = (actual != null && actual.getId() != null)
+                        ? session.find(Usuario.class, actual.getId())
+                        : proforma.getVendedor();
+
                 // 3. Copiar cada producto a la factura y sacarlo de bodega
                 double total = 0;
                 for (DetalleProforma detalle : detalles) {
@@ -86,7 +93,8 @@ public class FacturaService {
                     producto.setStock(producto.getStock() - detalle.getCantidad());
                     session.persist(new MovimientoInventario(producto,
                             "SALIDA", detalle.getCantidad(),
-                            "Factura #" + orden.getId()));
+                            "Factura #" + orden.getId(),
+                            responsable));
                     total += detalle.getSubtotal();
                 }
 

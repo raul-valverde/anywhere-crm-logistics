@@ -25,6 +25,10 @@ public class MovimientoInventario {
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
+    @ManyToOne // Muchos movimientos pueden ser registrados por UN usuario
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     public MovimientoInventario() {}
 
     public MovimientoInventario(Producto producto, String tipo, Integer cantidad, String motivo) {
@@ -33,6 +37,11 @@ public class MovimientoInventario {
         this.cantidad = cantidad;
         this.motivo = motivo;
         this.fecha = LocalDateTime.now();
+    }
+
+    public MovimientoInventario(Producto producto, String tipo, Integer cantidad, String motivo, Usuario usuario) {
+        this(producto, tipo, cantidad, motivo);
+        this.usuario = usuario;
     }
 
     // Getters y Setters
@@ -52,4 +61,7 @@ public class MovimientoInventario {
 
     public Producto getProducto() { return producto; }
     public void setProducto(Producto producto) { this.producto = producto; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 }
