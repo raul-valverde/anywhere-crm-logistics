@@ -731,9 +731,8 @@
 /* ---------------------------------------------------------------------
    Isla Dinámica (ui/DynamicIslandNav): navegación flotante superior
    --------------------------------------------------------------------- */
-.island-layer {
-    -fx-background-color: transparent;
-}
+/* .island-layer NO lleva fondo (ni siquiera "transparent"): con pickOnBounds = false,
+   JavaFX trata un fondo transparente como superficie que recibe clics. */
 
 .island {
     -fx-background-color: #0B1F3A;
