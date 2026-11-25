@@ -96,8 +96,9 @@ public class ProformasController {
                     FXMLLoader(getClass().getResource("/ni/edu/uam/anywherecrm/proforma-form-view.fxml"));
             Stage ventana = new Stage();
             ventana.setTitle("Anywhere CRM - Nueva proforma");
-            ventana.setScene(new Scene(loader.load(), 750, 550));
+            ventana.setScene(new Scene(loader.load(), 900, 600));
             ventana.initModality(Modality.APPLICATION_MODAL); // Bloquea esta pantalla hasta cerrar el formulario
+            ventana.setMaximized(true); // Igual que el resto de ventanas: ocupa toda la pantalla
             ventana.showAndWait();
             cargarProformas();
         } catch (IOException e) {

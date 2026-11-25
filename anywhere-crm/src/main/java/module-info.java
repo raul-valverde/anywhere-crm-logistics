@@ -14,6 +14,8 @@ module ni.edu.uam.anywherecrm {
     // Permisos para que JavaFX cargue tus pantallas y controladores
     opens ni.edu.uam.anywherecrm to javafx.fxml;
     opens ni.edu.uam.anywherecrm.controller to javafx.fxml;
+    // Componentes visuales reutilizables (Isla Dinámica DynamicIslandNav usada desde los FXML)
+    opens ni.edu.uam.anywherecrm.ui to javafx.fxml;
 
     // Permisos combinados: JavaFX (para las tablas) e Hibernate (para la BD) acceden al modelo
     opens ni.edu.uam.anywherecrm.model to org.hibernate.orm.core, javafx.base;

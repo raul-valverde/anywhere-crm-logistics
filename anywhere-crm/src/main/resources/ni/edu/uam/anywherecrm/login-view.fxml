@@ -1,15 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.SVGPath?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ni.edu.uam.anywherecrm.controller.LoginController"
-      alignment="CENTER" spacing="15" prefWidth="400" prefHeight="400" style="-fx-padding: 30;">
+<!-- Login dividido en dos paneles: marca (55 %) | formulario (45 %) -->
+<GridPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+          fx:controller="ni.edu.uam.anywherecrm.controller.LoginController"
+          stylesheets="@styles.css"
+          prefWidth="1200" prefHeight="750">
 
-    <Label text="Anywhere CRM - Acceso al Sistema" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+    <columnConstraints>
+        <ColumnConstraints percentWidth="55" hgrow="ALWAYS"/>
+        <ColumnConstraints percentWidth="45" hgrow="ALWAYS"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS"/>
+    </rowConstraints>
 
-    <TextField fx:id="txtUsername" promptText="Nombre de usuario"/>
-    <PasswordField fx:id="txtPassword" promptText="Contraseña"/>
+    <!-- ===== Panel izquierdo: branding ===== -->
+    <BorderPane styleClass="login-brand" GridPane.columnIndex="0" GridPane.rowIndex="0">
+        <center>
+            <VBox alignment="CENTER" spacing="18">
+                <StackPane styleClass="brand-badge">
+                    <!-- Globo terráqueo minimalista -->
+                    <SVGPath styleClass="brand-icon" scaleX="3" scaleY="3"
+                             content="M2 12 A10 10 0 1 0 22 12 A10 10 0 1 0 2 12 Z M2 12 H22 M12 2 A15.3 15.3 0 0 1 16 12 A15.3 15.3 0 0 1 12 22 A15.3 15.3 0 0 1 8 12 A15.3 15.3 0 0 1 12 2 Z"/>
+                </StackPane>
+                <Label text="anywhere" styleClass="brand-title">
+                    <VBox.margin><Insets top="10"/></VBox.margin>
+                </Label>
+                <Region styleClass="brand-accent-line"/>
+                <Label text="Intelligent Management, Global Results." styleClass="brand-tagline"/>
+            </VBox>
+        </center>
+        <bottom>
+            <HBox alignment="CENTER">
+                <padding><Insets bottom="28"/></padding>
+                <Label text="Anywhere CRM Logistics  ·  Clientes  ·  Inventario  ·  Despachos" styleClass="brand-footer"/>
+            </HBox>
+        </bottom>
+    </BorderPane>
 
-    <Button text="Iniciar Sesión" onAction="#handleLogin" prefWidth="200" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;"/>
-</VBox>
+    <!-- ===== Panel derecho: formulario ===== -->
+    <StackPane styleClass="login-form-pane" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <padding><Insets top="40" right="48" bottom="40" left="48"/></padding>
+        <VBox spacing="22" alignment="CENTER_LEFT" maxWidth="400" maxHeight="-Infinity">
+
+            <VBox spacing="6">
+                <Label text="Bienvenido de nuevo" styleClass="login-heading"/>
+                <Label text="Inicia sesión para continuar en Anywhere CRM" styleClass="login-subheading"/>
+            </VBox>
+
+            <VBox spacing="4">
+                <VBox.margin><Insets top="12"/></VBox.margin>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <SVGPath styleClass="field-icon" scaleX="0.7" scaleY="0.7"
+                             content="M20 21 v-2 a4 4 0 0 0 -4 -4 H8 a4 4 0 0 0 -4 4 v2 M8 7 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0"/>
+                    <Label text="USUARIO" styleClass="field-label"/>
+                </HBox>
+                <TextField fx:id="txtUsername" promptText="Nombre de usuario" styleClass="line-field"/>
+            </VBox>
+
+            <VBox spacing="4">
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <SVGPath styleClass="field-icon" scaleX="0.7" scaleY="0.7"
+                             content="M5 11 h14 a2 2 0 0 1 2 2 v7 a2 2 0 0 1 -2 2 H5 a2 2 0 0 1 -2 -2 v-7 a2 2 0 0 1 2 -2 Z M7 11 V7 a5 5 0 0 1 10 0 v4"/>
+                    <Label text="CONTRASEÑA" styleClass="field-label"/>
+                </HBox>
+                <PasswordField fx:id="txtPassword" promptText="Contraseña" styleClass="line-field"/>
+            </VBox>
+
+            <Button text="Iniciar Sesión" onAction="#handleLogin" styleClass="btn-login"
+                    defaultButton="true" maxWidth="Infinity">
+                <VBox.margin><Insets top="14"/></VBox.margin>
+            </Button>
+
+            <Label text="© 2026 Anywhere CRM · Acceso restringido a personal autorizado" styleClass="login-footer"
+                   wrapText="true">
+                <VBox.margin><Insets top="8"/></VBox.margin>
+            </Label>
+        </VBox>
+    </StackPane>
+</GridPane>

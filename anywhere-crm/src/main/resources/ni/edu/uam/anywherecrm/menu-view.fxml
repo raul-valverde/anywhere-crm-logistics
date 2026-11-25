@@ -1,27 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="ni.edu.uam.anywherecrm.controller.MenuController"
-      alignment="CENTER" spacing="15" style="-fx-padding: 30;">
-    <Label text="Anywhere CRM - Menú Principal" style="-fx-font-size: 20px; -
-fx-font-weight: bold;"/>
-    <Label fx:id="lblBienvenida"/>
-    <Button fx:id="btnClientes" text="Clientes" onAction="#abrirClientes"
-            prefWidth="220"/>
-    <Button fx:id="btnProformas" text="Proformas" onAction="#abrirProformas"
-            prefWidth="220"/>
-    <Button fx:id="btnInventario" text="Inventario"
-            onAction="#abrirInventario" prefWidth="220"/>
-    <Button fx:id="btnReportes" text="Reportes" onAction="#abrirReportes"
-            prefWidth="220"/>
-    <Button fx:id="btnFacturas" text="Facturas" onAction="#abrirFacturas"
-            prefWidth="220"/>
-    <Button fx:id="btnDespachos" text="Despachos" onAction="#abrirDespachos"
-            prefWidth="220"/>
+<?import javafx.scene.shape.SVGPath?>
+<?import ni.edu.uam.anywherecrm.ui.DynamicIslandNav?>
 
-    <Button text="Cerrar sesión" onAction="#handleCerrarSesion"
-            prefWidth="220"
-            style="-fx-background-color: #757575; -fx-text-fill: white;"/>
-</VBox>
+<!-- Menú principal estilo dashboard: contenido a todo el ancho + Isla Dinámica flotante arriba.
+     Los botones de módulos y "Cerrar sesión" conservan sus fx:id y onAction originales:
+     se entregan a la isla (propiedades "modulos" y "botonSalir"), que solo los estiliza y coloca.
+     MenuController sigue aplicando sobre ellos los permisos por rol. -->
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="ni.edu.uam.anywherecrm.controller.MenuController"
+           stylesheets="@styles.css" styleClass="app-shell"
+           prefWidth="1280" prefHeight="800">
 
+    <!-- ================= Capa base: dashboard ================= -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" focusTraversable="false" styleClass="content-scroll, content-layer">
+        <VBox styleClass="dashboard-content" spacing="22">
+
+            <!-- Encabezado -->
+            <HBox alignment="CENTER_LEFT" spacing="16">
+                <VBox spacing="4">
+                    <Label text="Menú Principal" styleClass="screen-title"/>
+                    <Label fx:id="lblFecha" text="Resumen general de la operación" styleClass="screen-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblBienvenida" styleClass="user-badge">
+                    <graphic>
+                        <SVGPath styleClass="badge-icon" scaleX="0.75" scaleY="0.75"
+                                 content="M20 21 v-2 a4 4 0 0 0 -4 -4 H8 a4 4 0 0 0 -4 4 v2 M8 7 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0"/>
+                    </graphic>
+                </Label>
+            </HBox>
+
+            <!-- Tarjetas KPI -->
+            <HBox spacing="20" minHeight="-Infinity">
+                <VBox styleClass="card, kpi-card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="300" maxWidth="Infinity" minHeight="-Infinity">
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <StackPane styleClass="kpi-icon-box, kpi-cyan">
+                            <SVGPath styleClass="kpi-icon" content="M17 21 v-2 a4 4 0 0 0 -4 -4 H5 a4 4 0 0 0 -4 4 v2 M5 7 a4 4 0 1 0 8 0 a4 4 0 1 0 -8 0 M23 21 v-2 a4 4 0 0 0 -3 -3.87 M16 3.13 a4 4 0 0 1 0 7.75"/>
+                        </StackPane>
+                        <Label text="Clientes registrados" styleClass="kpi-title"/>
+                    </HBox>
+                    <Label fx:id="lblKpiClientes" text="—" styleClass="kpi-value"/>
+                    <Label fx:id="lblKpiClientesDetalle" text="Cartera total de clientes" styleClass="kpi-caption"/>
+                </VBox>
+
+                <VBox styleClass="card, kpi-card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="300" maxWidth="Infinity" minHeight="-Infinity">
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <StackPane styleClass="kpi-icon-box, kpi-green">
+                            <SVGPath styleClass="kpi-icon" content="M14 2 H6 a2 2 0 0 0 -2 2 v16 a2 2 0 0 0 2 2 h12 a2 2 0 0 0 2 -2 V8 Z M14 2 v6 h6 M16 13 H8 M16 17 H8 M10 9 H8"/>
+                        </StackPane>
+                        <Label text="Proformas pendientes" styleClass="kpi-title"/>
+                    </HBox>
+                    <Label fx:id="lblKpiProformas" text="—" styleClass="kpi-value"/>
+                    <Label fx:id="lblKpiProformasDetalle" text="Ventas por confirmar" styleClass="kpi-caption"/>
+                </VBox>
+
+                <VBox styleClass="card, kpi-card" spacing="10" HBox.hgrow="ALWAYS" prefWidth="300" maxWidth="Infinity" minHeight="-Infinity">
+                    <HBox alignment="CENTER_LEFT" spacing="12">
+                        <StackPane styleClass="kpi-icon-box, kpi-navy">
+                            <SVGPath styleClass="kpi-icon" content="M1 3 H16 V16 H1 Z M16 8 H20 L23 11 V16 H16 Z M3 18.5 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0 M16 18.5 a2.5 2.5 0 1 0 5 0 a2.5 2.5 0 1 0 -5 0"/>
+                        </StackPane>
+                        <Label text="Despachos activos" styleClass="kpi-title"/>
+                    </HBox>
+                    <Label fx:id="lblKpiDespachos" text="—" styleClass="kpi-value"/>
+                    <Label fx:id="lblKpiDespachosDetalle" text="Pendientes o en camino" styleClass="kpi-caption"/>
+                </VBox>
+            </HBox>
+
+            <!-- Visualización ejecutiva -->
+            <HBox spacing="20" VBox.vgrow="ALWAYS" minHeight="280">
+                <!-- Gráfico: Top productos más vendidos (ReportesDAO, misma consulta HQL que Reportes) -->
+                <VBox styleClass="card" spacing="8" HBox.hgrow="ALWAYS" prefWidth="640" maxWidth="Infinity">
+                    <padding><Insets top="20" right="22" bottom="14" left="22"/></padding>
+                    <HBox alignment="CENTER_LEFT">
+                        <VBox spacing="2">
+                            <Label text="Top productos más vendidos" styleClass="section-title"/>
+                            <Label text="Unidades vendidas por producto (facturas registradas)" styleClass="section-caption"/>
+                        </VBox>
+                    </HBox>
+                    <StackPane VBox.vgrow="ALWAYS">
+                        <BarChart fx:id="chartTopProductos" styleClass="dashboard-chart"
+                                  legendVisible="false" animated="false" horizontalGridLinesVisible="true"
+                                  verticalGridLinesVisible="false" barGap="4" categoryGap="22">
+                            <xAxis><CategoryAxis tickLabelGap="6"/></xAxis>
+                            <yAxis><NumberAxis minorTickVisible="false" tickLabelGap="6"/></yAxis>
+                        </BarChart>
+                        <Label fx:id="lblSinDatosGrafico" text="Cargando datos…" styleClass="help-text"/>
+                    </StackPane>
+                </VBox>
+
+                <!-- Actividad reciente: últimas proformas registradas -->
+                <VBox styleClass="card" spacing="12" HBox.hgrow="SOMETIMES" prefWidth="360" minWidth="300" maxWidth="460">
+                    <padding><Insets top="20" right="20" bottom="16" left="20"/></padding>
+                    <VBox spacing="2">
+                        <Label text="Actividad reciente" styleClass="section-title"/>
+                        <Label text="Últimas proformas registradas" styleClass="section-caption"/>
+                    </VBox>
+                    <VBox fx:id="boxActividad" spacing="0" VBox.vgrow="ALWAYS">
+                        <Label text="Cargando actividad…" styleClass="help-text"/>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+
+    <!-- ================= Capa flotante: Isla Dinámica ================= -->
+    <DynamicIslandNav activo="INICIO">
+        <modulos>
+            <Button fx:id="btnClientes" text="Clientes" userData="CLIENTES" onAction="#abrirClientes"/>
+            <Button fx:id="btnProformas" text="Proformas" userData="PROFORMAS" onAction="#abrirProformas"/>
+            <Button fx:id="btnInventario" text="Inventario" userData="INVENTARIO" onAction="#abrirInventario"/>
+            <Button fx:id="btnReportes" text="Reportes" userData="REPORTES" onAction="#abrirReportes"/>
+            <Button fx:id="btnFacturas" text="Facturas" userData="FACTURAS" onAction="#abrirFacturas"/>
+            <Button fx:id="btnDespachos" text="Despachos" userData="DESPACHOS" onAction="#abrirDespachos"/>
+        </modulos>
+        <botonSalir>
+            <Button text="Cerrar sesión" onAction="#handleCerrarSesion"/>
+        </botonSalir>
+    </DynamicIslandNav>
+</StackPane>
