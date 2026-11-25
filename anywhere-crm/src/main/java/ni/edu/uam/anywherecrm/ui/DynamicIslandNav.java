@@ -4,6 +4,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
@@ -32,7 +33,6 @@ import javafx.util.Duration;
 import ni.edu.uam.anywherecrm.model.Usuario;
 import ni.edu.uam.anywherecrm.util.Sesion;
 
-import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -90,9 +90,14 @@ public class DynamicIslandNav extends StackPane {
 
     private Capsula capsula; // Se crea en el constructor (la usan los manejadores de clic fuera / ESC)
 
-    // Clic fuera de la cápsula o ESC: se contrae
+    // true si el clic actual empezó con la isla contraída: solo ese clic puede expandirla.
+    // Evita que el clic que elige un módulo (que la contrae) la vuelva a abrir al llegar a la cápsula.
+    private boolean presionContraida = false;
+
+    // Clic fuera de la cápsula o ESC: se contrae. Nunca consume el evento, y si el clic
+    // ocurre dentro de la isla (botones incluidos) no hace nada: el botón recibe su clic completo.
     private final EventHandler<MouseEvent> clicFuera = e -> {
-        if (expandida && !capsula.localToScene(capsula.getBoundsInLocal()).contains(e.getSceneX(), e.getSceneY())) {
+        if (expandida && !esDentroDeLaIsla(e)) {
             contraer();
         }
     };
@@ -102,9 +107,18 @@ public class DynamicIslandNav extends StackPane {
 
     public DynamicIslandNav() {
         getStyleClass().add("island-layer");
-        setPickOnBounds(false); // La capa transparente deja pasar los clics a la pantalla de abajo
+        // NUNCA se estira a pantalla completa: mide exactamente lo mismo que la cápsula visible.
+        // (Un StackPane estira a sus hijos al tamaño de la ventana si su tamaño máximo lo permite.)
+        setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
+        setPickOnBounds(false); // Sin fondo propio: solo la cápsula recibe clics
+        // Arriba al centro del StackPane de la pantalla, 12 px bajo el borde (margen, no padding:
+        // así tampoco queda una franja invisible sobre el contenido)
+        StackPane.setAlignment(this, Pos.TOP_CENTER);
+        StackPane.setMargin(this, new Insets(12, 0, 0, 0));
+        // Siempre por encima del contenido, aunque en el FXML no quede como último hijo del StackPane
+        // (viewOrder menor = se dibuja encima y recibe primero el clic)
+        setViewOrder(-100);
         setAlignment(Pos.TOP_CENTER);
-        setPadding(new Insets(12, 0, 0, 0));
 
         // ----- Vista contraída: ● [ícono] Módulo ⌄
         Circle punto = new Circle(4);
@@ -116,6 +130,8 @@ public class DynamicIslandNav extends StackPane {
         chevron.setScaleX(0.6);
         chevron.setScaleY(0.6);
         vistaContraida = new HBox(8, punto, iconoActivo, nombreActivo, chevron);
+        // Los adornos no capturan el clic: lo recibe la cápsula completa
+        vistaContraida.getChildren().forEach(n -> n.setMouseTransparent(true));
         vistaContraida.setAlignment(Pos.CENTER);
         vistaContraida.getStyleClass().add("island-compact");
 
@@ -126,6 +142,7 @@ public class DynamicIslandNav extends StackPane {
         Label marca = new Label("anywhere");
         marca.getStyleClass().add("island-logo-text");
         HBox zonaLogo = new HBox(6, logo, marca);
+        zonaLogo.setMouseTransparent(true); // Decorativo
         zonaLogo.setAlignment(Pos.CENTER_LEFT);
         zonaLogo.setMinWidth(Region.USE_PREF_SIZE);
 
@@ -139,6 +156,7 @@ public class DynamicIslandNav extends StackPane {
         }
 
         usuario.getStyleClass().add("island-user");
+        usuario.setMouseTransparent(true); // Solo informativo
         Usuario actual = Sesion.getUsuarioActual();
         usuario.setText(actual == null ? "" : actual.getUsername() + " (" + actual.getRol() + ")");
         Region divisor = new Region();
@@ -157,8 +175,13 @@ public class DynamicIslandNav extends StackPane {
         vistaExpandida.setMouseTransparent(true);
 
         capsula = new Capsula();
+        // Solo expande un clic que EMPEZÓ con la isla contraída (no el clic de un botón de módulo)
+        capsula.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> presionContraida = !expandida);
         capsula.setOnMouseClicked(e -> {
-            if (!expandida) expandir();
+            if (presionContraida && !expandida && e.getButton() == javafx.scene.input.MouseButton.PRIMARY) {
+                expandir();
+            }
+            presionContraida = false;
         });
         getChildren().add(capsula);
 
@@ -170,14 +193,16 @@ public class DynamicIslandNav extends StackPane {
         });
 
         // El clic fuera / ESC se escuchan en la pantalla que contiene a la isla
-        parentProperty().addListener((obs, anterior, nuevo) -> {
+        // Filtro PASIVO en la Scene (nunca consume el evento). Como la Scene es la misma para toda
+        // la sesión, se quita cuando esta pantalla sale de escena (al navegar) para no acumular filtros.
+        sceneProperty().addListener((obs, anterior, nueva) -> {
             if (anterior != null) {
                 anterior.removeEventFilter(MouseEvent.MOUSE_PRESSED, clicFuera);
                 anterior.removeEventFilter(KeyEvent.KEY_PRESSED, teclaEsc);
             }
-            if (nuevo != null) {
-                nuevo.addEventFilter(MouseEvent.MOUSE_PRESSED, clicFuera);
-                nuevo.addEventFilter(KeyEvent.KEY_PRESSED, teclaEsc);
+            if (nueva != null) {
+                nueva.addEventFilter(MouseEvent.MOUSE_PRESSED, clicFuera);
+                nueva.addEventFilter(KeyEvent.KEY_PRESSED, teclaEsc);
             }
         });
 
@@ -211,6 +236,7 @@ public class DynamicIslandNav extends StackPane {
         botonSalir = boton;
         if (!boton.getStyleClass().contains("island-logout")) boton.getStyleClass().add("island-logout");
         boton.setMinWidth(Region.USE_PREF_SIZE);
+        boton.setFocusTraversable(false);
         zonaDerecha.getChildren().add(boton);
     }
 
@@ -223,7 +249,9 @@ public class DynamicIslandNav extends StackPane {
     public void expandir() {
         if (expandida) return;
         expandida = true;
-        double disponible = getWidth() > 0 ? getWidth() - 2 * MARGEN_LATERAL : ANCHO_MAX_EXPANDIDO;
+        // La isla ya no ocupa toda la pantalla: el espacio disponible se mide con el ancho de la escena
+        double anchoPantalla = getScene() != null ? getScene().getWidth() : 0;
+        double disponible = anchoPantalla > 0 ? anchoPantalla - 2 * MARGEN_LATERAL : ANCHO_MAX_EXPANDIDO;
         double natural = vistaExpandida.prefWidth(-1);
         double objetivo = Math.min(Math.max(natural, ANCHO_MIN_EXPANDIDO), Math.min(ANCHO_MAX_EXPANDIDO, disponible));
         vistaExpandida.setPrefWidth(objetivo);
@@ -260,8 +288,9 @@ public class DynamicIslandNav extends StackPane {
         if (!boton.getStyleClass().contains("island-link")) boton.getStyleClass().add("island-link");
         boton.setFocusTraversable(false);
         boton.setMinWidth(Region.USE_PREF_SIZE);
-        // Al elegir cualquier módulo la isla se contrae (no reemplaza el onAction propio del botón)
-        boton.addEventHandler(ActionEvent.ACTION, e -> contraer());
+        // Al elegir un módulo la isla se contrae DESPUÉS de que el onAction del botón termina
+        // (navegación primero). No reemplaza el onAction propio del botón (el del menú viene del FXML).
+        boton.addEventHandler(ActionEvent.ACTION, e -> Platform.runLater(this::contraer));
         int posicion = anterior == null ? -1 : zonaModulos.getChildren().indexOf(anterior);
         if (posicion >= 0) {
             zonaModulos.getChildren().set(posicion, boton);
@@ -297,6 +326,7 @@ public class DynamicIslandNav extends StackPane {
             SVGPath svg = icono(modulo.getIcono(), "island-icon");
             svg.setScaleX(0.7);
             svg.setScaleY(0.7);
+            svg.setMouseTransparent(true); // El ícono no se queda con el clic: lo recibe el botón
             boton.setGraphic(svg);
         } else {
             boton.setGraphic(null);
@@ -311,17 +341,38 @@ public class DynamicIslandNav extends StackPane {
             } else {
                 Ventanas.abrirModulo(destino.getFxml(), destino.getTitulo());
             }
-        } catch (IOException ex) {
-            alerta("No se pudo abrir " + destino.getTitulo() + ": " + ex.getMessage());
+        } catch (Exception ex) {
+            // Cualquier fallo al cargar la vista se informa (nunca un clic "mudo")
+            ex.printStackTrace();
+            alerta("No se pudo abrir " + destino.getTitulo() + ": " + causa(ex));
         }
     }
 
     private void cerrarSesion() {
         try {
             Ventanas.cerrarSesion();
-        } catch (IOException ex) {
-            alerta("No se pudo volver al login: " + ex.getMessage());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            alerta("No se pudo volver al login: " + causa(ex));
         }
+    }
+
+    // true si el clic ocurrió sobre la cápsula o cualquiera de sus descendientes (botones incluidos)
+    private boolean esDentroDeLaIsla(MouseEvent e) {
+        Node tocado = e.getPickResult() == null ? null : e.getPickResult().getIntersectedNode();
+        for (Node n = tocado; n != null; n = n.getParent()) {
+            if (n == capsula) return true;
+        }
+        // Respaldo por coordenadas (por ejemplo, si el nodo tocado ya no está en la escena)
+        return capsula.localToScene(capsula.getLayoutBounds()).contains(e.getSceneX(), e.getSceneY());
+    }
+
+    // Mensaje útil: la causa raíz (p. ej. el error real dentro del controlador de la vista)
+    private static String causa(Throwable ex) {
+        Throwable raiz = ex;
+        while (raiz.getCause() != null && raiz.getCause() != raiz) raiz = raiz.getCause();
+        String mensaje = raiz.getMessage() != null ? raiz.getMessage() : raiz.getClass().getSimpleName();
+        return ex == raiz ? mensaje : ex.getMessage() + " (" + mensaje + ")";
     }
 
     private static SVGPath icono(String contenido, String clase) {
