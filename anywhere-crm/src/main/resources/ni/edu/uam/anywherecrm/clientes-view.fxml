@@ -22,10 +22,19 @@
             <!-- Formulario y acciones -->
             <VBox styleClass="card" spacing="12">
                 <Label text="Datos del cliente" styleClass="section-title"/>
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtNombre" promptText="Nombre" HBox.hgrow="ALWAYS" prefWidth="240"/>
-                    <TextField fx:id="txtTelefono" promptText="Teléfono" HBox.hgrow="ALWAYS" prefWidth="170"/>
-                    <TextField fx:id="txtEmail" promptText="Email" HBox.hgrow="ALWAYS" prefWidth="240"/>
+                <HBox spacing="10" alignment="BOTTOM_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Nombre" styleClass="field-label"/>
+                        <TextField fx:id="txtNombre" promptText="Nombre" prefWidth="240"/>
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Teléfono" styleClass="field-label"/>
+                        <TextField fx:id="txtTelefono" promptText="Teléfono" prefWidth="170"/>
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Email" styleClass="field-label"/>
+                        <TextField fx:id="txtEmail" promptText="Email" prefWidth="240"/>
+                    </VBox>
                     <Button text="Guardar" onAction="#handleGuardar" styleClass="btn-success"/>
                     <Button text="Nuevo" onAction="#limpiarFormulario"/>
                     <Button text="Eliminar" onAction="#handleEliminar" styleClass="btn-danger"/>
@@ -33,8 +42,11 @@
             </VBox>
 
             <!-- Búsqueda -->
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <TextField fx:id="txtBuscar" promptText="Buscar por nombre" onAction="#handleBuscar" prefWidth="320"/>
+            <HBox spacing="10" alignment="BOTTOM_LEFT">
+                <VBox spacing="4">
+                    <Label text="Buscar cliente" styleClass="field-label"/>
+                    <TextField fx:id="txtBuscar" promptText="Buscar por nombre" onAction="#handleBuscar" prefWidth="320"/>
+                </VBox>
                 <Button text="Buscar" onAction="#handleBuscar" styleClass="btn-dark"/>
             </HBox>
 
