@@ -15,6 +15,7 @@ import ni.edu.uam.anywherecrm.model.RutaEntrega;
 import ni.edu.uam.anywherecrm.model.Usuario;
 import ni.edu.uam.anywherecrm.service.RutaService;
 import ni.edu.uam.anywherecrm.util.Navegacion;
+import ni.edu.uam.anywherecrm.dao.GenericDAO;
 
 import java.awt.Desktop;
 import java.net.URI;
@@ -57,6 +58,7 @@ public class DespachosController {
     @FXML private Button btnArmarRuta;
 
     private final DespachoDAO despachoDAO = new DespachoDAO();
+    private final GenericDAO<Despacho> despachoGenericDAO = new GenericDAO<>(Despacho.class);
     private final RutaService rutaService = new RutaService();
 
     private RutaService.Ubicacion ubicacionActual; // Dirección ya ubicada por la API
@@ -319,7 +321,26 @@ public class DespachosController {
             mostrarAlerta("No permitido", e.getMessage(), Alert.AlertType.WARNING);
         }
     }
-
+    // Solo se pueden eliminar despachos que todavía no salen
+    @FXML
+    private void handleEliminarDespacho() {
+        Despacho despacho = tablaDespachos.getSelectionModel().getSelectedItem();
+        if (despacho == null) {
+            mostrarAlerta("Sin selección", "Selecciona un despacho de la tabla de abajo", Alert.AlertType.WARNING);
+            return;
+        }
+        if (!"PENDIENTE".equals(despacho.getEstado())) {
+            mostrarAlerta("No permitido", "Solo se pueden eliminar despachos PENDIENTES", Alert.AlertType.WARNING);
+            return;
+        }
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION,
+                "¿Eliminar el despacho #" + despacho.getId() + "?", ButtonType.OK, ButtonType.CANCEL);
+        confirmacion.setHeaderText(null);
+        if (confirmacion.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            despachoGenericDAO.eliminar(despacho);
+            cargarDatos();
+        }
+    }
     // Deja solo el nombre corto del lugar, sin todo el detalle que da la API
     private String resumirNombre(String nombreCompleto) {
         String[] partes = nombreCompleto.split(",");

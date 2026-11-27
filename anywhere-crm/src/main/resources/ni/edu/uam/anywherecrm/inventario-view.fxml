@@ -28,6 +28,7 @@
                     <TextField fx:id="txtStock" promptText="Cantidad Stock" prefWidth="140"/>
                     <ComboBox fx:id="cbCategoria" promptText="Categoría" prefWidth="180"/>
                     <Button text="Guardar Producto" onAction="#handleGuardarProducto" styleClass="btn-success"/>
+                    <Button text="Eliminar" onAction="#handleEliminarProducto" styleClass="btn-danger"/>
                     <Button text="PDF de inventario" onAction="#handlePdfInventario" styleClass="btn-primary"/>
                 </HBox>
             </VBox>

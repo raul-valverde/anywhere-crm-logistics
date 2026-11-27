@@ -141,6 +141,28 @@ public class InventarioController {
             mostrarAlerta("Error de BD", "No se pudo guardar el producto: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
+    @FXML
+    private void handleEliminarProducto() {
+        Producto producto = tablaProductos.getSelectionModel().getSelectedItem();
+        if (producto == null) {
+            mostrarAlerta("Sin selección", "Selecciona un producto de la tabla", Alert.AlertType.WARNING);
+            return;
+        }
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION,
+                "¿Eliminar " + producto.getNombre() + "?", ButtonType.OK, ButtonType.CANCEL);
+        confirmacion.setHeaderText(null);
+        if (confirmacion.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+            try {
+                productoDAO.eliminar(producto);
+                cargarDatos();
+            } catch (RuntimeException e) {
+                // La BD no deja borrar un producto que ya tiene movimientos, proformas o facturas
+                mostrarAlerta("No se puede eliminar",
+                        "El producto ya tiene movimientos, proformas o facturas registradas.",
+                        Alert.AlertType.WARNING);
+            }
+        }
+    }
     private void configurarTablaMovimientos() {
         colMovFecha.setCellValueFactory(new PropertyValueFactory<>("fecha"));
         colMovTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
