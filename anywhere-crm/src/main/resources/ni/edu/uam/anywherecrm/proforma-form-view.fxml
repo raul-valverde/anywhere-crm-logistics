@@ -21,6 +21,7 @@
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Label text="Producto:" styleClass="field-label" minWidth="70"/>
             <ComboBox fx:id="cbProducto" promptText="Elige un producto" prefWidth="360"/>
+            <Label text="Cantidad:" styleClass="field-label"/>
             <TextField fx:id="txtCantidad" promptText="Cantidad" prefWidth="110" onAction="#handleAgregar"/>
             <Button text="Agregar" onAction="#handleAgregar" styleClass="btn-primary"/>
             <Button text="Quitar" onAction="#handleQuitar"/>

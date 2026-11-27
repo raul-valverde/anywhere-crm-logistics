@@ -43,14 +43,26 @@
                     <Label text="2" styleClass="step-badge"/>
                     <Label text="Crear el despacho de la factura seleccionada" styleClass="section-title"/>
                 </HBox>
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <ComboBox fx:id="cbTipo" prefWidth="130"/>
-                    <TextField fx:id="txtDireccion" promptText="Dirección (ej: Metrocentro, Managua)" HBox.hgrow="ALWAYS" prefWidth="280"/>
+                <HBox spacing="10" alignment="BOTTOM_LEFT">
+                    <VBox spacing="4">
+                        <Label text="Tipo de despacho" styleClass="field-label"/>
+                        <ComboBox fx:id="cbTipo" prefWidth="130"/>
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Dirección de entrega" styleClass="field-label"/>
+                        <TextField fx:id="txtDireccion" promptText="Dirección (ej: Metrocentro, Managua)" prefWidth="280"/>
+                    </VBox>
                     <Button fx:id="btnUbicar" text="Ubicar" onAction="#handleUbicar"/>
                     <!-- Estado de la ubicación, a la par del botón Ubicar -->
                     <Label fx:id="lblUbicacion" text="Sin ubicar" styleClass="badge-soft" minWidth="80" maxWidth="240"/>
-                    <ComboBox fx:id="cbRepartidor" promptText="Repartidor" prefWidth="160"/>
-                    <DatePicker fx:id="dpFecha" prefWidth="150"/>
+                    <VBox spacing="4">
+                        <Label text="Repartidor" styleClass="field-label"/>
+                        <ComboBox fx:id="cbRepartidor" promptText="Repartidor" prefWidth="160"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Fecha de despacho" styleClass="field-label"/>
+                        <DatePicker fx:id="dpFecha" prefWidth="150"/>
+                    </VBox>
                     <Button text="Crear despacho" onAction="#handleCrearDespacho" styleClass="btn-success"/>
                 </HBox>
             </VBox>

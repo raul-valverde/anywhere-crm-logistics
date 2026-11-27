@@ -22,11 +22,23 @@
             <!-- Alta de productos -->
             <VBox styleClass="card" spacing="12">
                 <Label text="Nuevo producto" styleClass="section-title"/>
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtNombre" promptText="Nombre del producto" HBox.hgrow="ALWAYS" prefWidth="240"/>
-                    <TextField fx:id="txtPrecio" promptText="Precio ($)" prefWidth="120"/>
-                    <TextField fx:id="txtStock" promptText="Cantidad Stock" prefWidth="140"/>
-                    <ComboBox fx:id="cbCategoria" promptText="Categoría" prefWidth="180"/>
+                <HBox spacing="10" alignment="BOTTOM_LEFT">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Nombre del producto" styleClass="field-label"/>
+                        <TextField fx:id="txtNombre" promptText="Nombre del producto" prefWidth="240"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Precio ($)" styleClass="field-label"/>
+                        <TextField fx:id="txtPrecio" promptText="Precio ($)" prefWidth="120"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Stock inicial" styleClass="field-label"/>
+                        <TextField fx:id="txtStock" promptText="Cantidad Stock" prefWidth="140"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Categoría" styleClass="field-label"/>
+                        <ComboBox fx:id="cbCategoria" promptText="Categoría" prefWidth="180"/>
+                    </VBox>
                     <Button text="Guardar Producto" onAction="#handleGuardarProducto" styleClass="btn-success"/>
                     <Button text="Eliminar" onAction="#handleEliminarProducto" styleClass="btn-danger"/>
                     <Button text="PDF de inventario" onAction="#handlePdfInventario" styleClass="btn-primary"/>
@@ -53,9 +65,15 @@
                     <Label text="Movimientos de bodega" styleClass="section-title"/>
                     <Label text="Selecciona un producto en la tabla de arriba y registra su entrada o salida" styleClass="section-caption"/>
                 </VBox>
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <TextField fx:id="txtCantidadMov" promptText="Cantidad" prefWidth="140"/>
-                    <TextField fx:id="txtMotivo" promptText="Motivo (opcional)" HBox.hgrow="ALWAYS" prefWidth="300"/>
+                <HBox spacing="10" alignment="BOTTOM_LEFT">
+                    <VBox spacing="4">
+                        <Label text="Cantidad" styleClass="field-label"/>
+                        <TextField fx:id="txtCantidadMov" promptText="Cantidad" prefWidth="140"/>
+                    </VBox>
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label text="Motivo" styleClass="field-label"/>
+                        <TextField fx:id="txtMotivo" promptText="Motivo (opcional)" prefWidth="300"/>
+                    </VBox>
                     <Button text="Registrar entrada" onAction="#handleRegistrarEntrada" styleClass="btn-primary"/>
                     <Button text="Registrar salida" onAction="#handleRegistrarSalida" styleClass="btn-warning"/>
                 </HBox>
