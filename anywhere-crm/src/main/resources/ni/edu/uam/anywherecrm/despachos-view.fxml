@@ -67,6 +67,7 @@
                 <Button text="Actualizar" onAction="#cargarDatos"/>
                 <Button text="Ver mapa" onAction="#handleVerMapa"/>
                 <Button text="Avanzar estado" onAction="#handleAvanzarEstado" styleClass="btn-warning"/>
+                <Button text="Eliminar" onAction="#handleEliminarDespacho" styleClass="btn-danger"/>
                 <Button fx:id="btnArmarRuta" text="Armar ruta" onAction="#handleArmarRuta" styleClass="btn-primary"/>
             </HBox>
             <TableView fx:id="tablaDespachos" VBox.vgrow="ALWAYS" prefHeight="300" minHeight="260">
